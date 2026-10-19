@@ -1,14 +1,22 @@
 import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
-from datetime import datetime, timedelta, timezone
-from typing import Any, Dict, List
+import csv
+import json
+import base64
+import socket
 import requests
+import urllib3.util.connection as urllib3_cn
+
 from dotenv import load_dotenv
+from typing import Any, Dict, List
+from datetime import datetime, timedelta, timezone
+from concurrent.futures import ThreadPoolExecutor, as_completed
+
+urllib3_cn.allowed_gai_family = lambda: socket.AF_INET
 
 load_dotenv()
 
 ZETTLE_API_KEY = os.getenv("ZETTLE_API_KEY")
-CLIENT_ID = os.getenv("ZETTLE_CLIENT_ID", "your-client-id")
+CLIENT_ID = os.getenv("ZETTLE_CLIENT_ID")
 
 AUTH_URL = "https://oauth.zettle.com/token"
 PURCHASE_URL = "https://purchase.izettle.com/purchases/v2"
@@ -154,3 +162,115 @@ def reset_all_prices(standard_prices: Dict[str, float]) -> None:
     delegate directly to `update_item_prices(standard_prices)` when ready.
     """
     pass
+
+
+def download_september_sales_csv(
+    output_file: str = "september_sales.csv",
+    year: int = 2026,
+) -> int:
+    """
+    Fetches all sales for the month of September (paginating through all batches)
+    and writes the original purchase records to a CSV file.
+    Returns the total number of sales saved.
+    """
+    headers = get_headers()
+    start_date = f"{year}-09-01T00:00:00Z"
+    end_date = f"{year}-10-01T00:00:00Z"
+
+    all_purchases: List[Dict[str, Any]] = []
+    last_hash = None
+
+    with requests.Session() as session:
+        session.headers.update(headers)
+
+        while True:
+            params: Dict[str, Any] = {
+                "startDate": start_date,
+                "endDate": end_date,
+                "limit": 1000,
+                "descending": "false",
+            }
+            if last_hash:
+                params["lastPurchaseHash"] = last_hash
+
+            resp = session.get(PURCHASE_URL, params=params, timeout=15)
+            resp.raise_for_status()
+            data = resp.json()
+
+            purchases = data.get("purchases", [])
+            if not purchases:
+                break
+
+            all_purchases.extend(purchases)
+            last_hash = data.get("lastPurchaseHash")
+
+            # If fewer than 1000 items were returned or no next cursor exists, we hit the end
+            if not last_hash or len(purchases) < 1000:
+                break
+
+    if not all_purchases:
+        return 0
+
+    # Collect all top-level keys across all purchase records to form the CSV header
+    fieldnames = list(dict.fromkeys(k for p in all_purchases for k in p.keys()))
+
+    with open(output_file, mode="w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        for purchase in all_purchases:
+            # Keep scalar values as-is; serialize nested dicts/lists as JSON strings
+            row = {
+                k: json.dumps(v, ensure_ascii=False)
+                if isinstance(v, (dict, list))
+                else v
+                for k, v in purchase.items()
+            }
+            writer.writerow(row)
+
+    return len(all_purchases)
+
+
+def print_catalog() -> None:
+    """
+    Fetches and pretty-prints the Zettle product catalog with names,
+    UUIDs, variants, and prices.
+    Requires scope: READ:PRODUCT
+    """
+    headers = get_headers()
+    resp = requests.get(PRODUCTS_URL, headers=headers, timeout=10)
+    resp.raise_for_status()
+    products = resp.json()
+
+    if not products:
+        print("Catalog is empty.")
+        return
+
+    print(f"\n{'='*60}")
+    print(f"ZETTLE PRODUCT CATALOG ({len(products)} items found)")
+    print(f"{'='*60}")
+
+    for p in products:
+        name = p.get("name", "Unnamed Product")
+        product_uuid = p.get("uuid", "N/A")
+        print(f"\n📌 Product: {name}")
+        print(f"   Product UUID: {product_uuid}")
+
+        variants = p.get("variants", [])
+        for v in variants:
+            v_name = v.get("name", "Default Variant")
+            v_uuid = v.get("uuid", "N/A")
+            price_obj = v.get("price", {})
+            amount_minor = price_obj.get("amount", 0)
+            currency = price_obj.get("currencyId", "DKK")
+            price_major = amount_minor / 100.0
+
+            print(f"     ├── Variant: {v_name}")
+            print(f"     │   Variant UUID: {v_uuid}")
+            print(f"     └── Price: {price_major:.2f} {currency}")
+
+    print(f"\n{'='*60}")
+
+
+#download_september_sales_csv()
+update_item_prices({"Flaske Spiritus": 1.0})
+#print_catalog()

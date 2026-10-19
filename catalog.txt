@@ -1,0 +1,546 @@
+
+============================================================
+ZETTLE PRODUCT CATALOG (48 items found)
+============================================================
+
+📌 Product: Drink
+   Product UUID: e32a3b00-9b62-11ee-a715-37bef6b1d1d6
+     ├── Variant: Aperol Spritz
+     │   Variant UUID: 4dd077f0-ed80-11f0-925d-738bb76434b7
+     └── Price: 25.00 DKK
+     ├── Variant: Lille Fysiker
+     │   Variant UUID: 76e181b0-b17e-11ee-9ce7-1632a686ce89
+     └── Price: 70.00 DKK
+     ├── Variant: Love Potion
+     │   Variant UUID: 04bfc130-b180-11ee-91a6-dd16006a37a3
+     └── Price: 30.00 DKK
+     ├── Variant: Koldskål
+     │   Variant UUID: 04bfc130-b180-11ee-b9cd-3c18d4cc3b95
+     └── Price: 30.00 DKK
+     ├── Variant: Astronaut
+     │   Variant UUID: 89a8d590-71b4-11ef-abb5-fba88d9d8235
+     └── Price: 30.00 DKK
+     ├── Variant: Vodka & Red Bull
+     │   Variant UUID: 0423d9b0-9b63-11ee-a715-37bef6b1d1d6
+     └── Price: 25.00 DKK
+     ├── Variant: Dark & Stormy
+     │   Variant UUID: 0b3b0930-9b63-11ee-a715-37bef6b1d1d6
+     └── Price: 20.00 DKK
+     ├── Variant: Rum & Coke
+     │   Variant UUID: 0d86a6e0-9b63-11ee-a715-37bef6b1d1d6
+     └── Price: 20.00 DKK
+     ├── Variant: Gin & Tonic
+     │   Variant UUID: 11110620-9b63-11ee-a715-37bef6b1d1d6
+     └── Price: 20.00 DKK
+     ├── Variant: Gin Hass
+     │   Variant UUID: 136d6cb0-9b63-11ee-a715-37bef6b1d1d6
+     └── Price: 20.00 DKK
+     ├── Variant: Isbjørn
+     │   Variant UUID: 89a8d590-71b4-11ef-83bf-3c08bc62f84c
+     └── Price: 20.00 DKK
+
+📌 Product: Gammelt Shot
+   Product UUID: eda6f6e0-d760-11f0-b717-b05f4ea8f006
+     ├── Variant: None
+     │   Variant UUID: edab3ca0-d760-11f0-8114-2ba437d821c9
+     └── Price: 5.00 DKK
+
+📌 Product: Pringles
+   Product UUID: ef337ec0-24d8-11ef-ae95-91d0cbb24db9
+     ├── Variant: None
+     │   Variant UUID: ef33cce0-24d8-11ef-a63e-f1f99fe5d431
+     └── Price: 10.00 DKK
+
+📌 Product: Fadøl
+   Product UUID: 9238f730-d7ea-11ee-9974-20fd4078bb71
+     ├── Variant: Grøn
+     │   Variant UUID: c2719090-615d-11ef-acc3-14049801124b
+     └── Price: 20.00 DKK
+     ├── Variant: Classic
+     │   Variant UUID: c2719090-615d-11ef-af9f-b54d90da7bc3
+     └── Price: 20.00 DKK
+     ├── Variant: Blanc
+     │   Variant UUID: c2719090-615d-11ef-ad19-a67657395ed1
+     └── Price: 25.00 DKK
+
+📌 Product: Specialøl
+   Product UUID: adedfee0-9b62-11ee-993f-14a17cfee16c
+     ├── Variant: Früli
+     │   Variant UUID: d457acc0-9b62-11ee-b5f1-26d8188de1e9
+     └── Price: 25.00 DKK
+     ├── Variant: Elvis Juice IPA
+     │   Variant UUID: d457acc0-9b62-11ee-9b54-51f9ffb706e9
+     └── Price: 25.00 DKK
+     ├── Variant: Punk IPA
+     │   Variant UUID: d457acc0-9b62-11ee-96f3-b0f113a31920
+     └── Price: 25.00 DKK
+
+📌 Product: Flaske Spiritus
+   Product UUID: 4c3bf420-90e9-11ec-a594-59e07415fd10
+     ├── Variant: None
+     │   Variant UUID: 4c3d0590-90e9-11ec-8532-c99faf6b9599
+     └── Price: 200.00 DKK
+
+📌 Product: Carlsberg Nordic
+   Product UUID: a7fd33d0-00cd-11f0-8e07-3445043d2d73
+     ├── Variant: None
+     │   Variant UUID: a7fd33d0-00cd-11f0-bbbc-719c0568075c
+     └── Price: 15.00 DKK
+
+📌 Product: Little Physicist
+   Product UUID: 667e9e10-1a3c-11f1-8488-d409807fbd50
+     ├── Variant: None
+     │   Variant UUID: 667e9e10-1a3c-11f1-ace5-0ad03bbdfd04
+     └── Price: 40.00 DKK
+
+📌 Product: Optional Drinks
+   Product UUID: ccf2d120-61df-11ed-a77f-c6fff8d76a65
+     ├── Variant: Isbjørn
+     │   Variant UUID: cb286150-af02-11ed-9f0f-2526d1b7d89a
+     └── Price: 25.00 DKK
+     ├── Variant: Billig Collada
+     │   Variant UUID: 40fdd920-61e0-11ed-b761-5da419ef5885
+     └── Price: 25.00 DKK
+     ├── Variant: After 8
+     │   Variant UUID: 40fdd920-61e0-11ed-966a-619aebd9555e
+     └── Price: 25.00 DKK
+     ├── Variant: Skumbanan
+     │   Variant UUID: 40fdd920-61e0-11ed-8873-fdc91afb0891
+     └── Price: 35.00 DKK
+     ├── Variant: Lille Fysiker
+     │   Variant UUID: 40fdd920-61e0-11ed-b8ea-bf62fdee900f
+     └── Price: 75.00 DKK
+
+📌 Product: Blanc 1664
+   Product UUID: 6c234150-26a2-11ec-afd6-3f978b96fbef
+     ├── Variant: None
+     │   Variant UUID: 6c234151-26a2-11ec-afd6-3f978b96fbef
+     └── Price: 14.00 DKK
+
+📌 Product: Shots
+   Product UUID: 5c9af300-1a3a-11f1-9174-6188a42f082c
+     ├── Variant: Bacardi Blanca
+     │   Variant UUID: 0b5277f0-1a3c-11f1-a413-d73b31feabc5
+     └── Price: 10.00 DKK
+     ├── Variant: Fernet Branca
+     │   Variant UUID: 0b529f00-1a3c-11f1-8789-1de23e522a5f
+     └── Price: 10.00 DKK
+     ├── Variant: Gin
+     │   Variant UUID: 0b529f00-1a3c-11f1-a562-5f1d59c750f7
+     └── Price: 10.00 DKK
+     ├── Variant: Havana Club
+     │   Variant UUID: 0b529f00-1a3c-11f1-b943-43efd68b621f
+     └── Price: 10.00 DKK
+     ├── Variant: Jarana Tequila
+     │   Variant UUID: 0b529f00-1a3c-11f1-ae63-4a06cfd895a5
+     └── Price: 10.00 DKK
+     ├── Variant: Jägermeister
+     │   Variant UUID: 0b529f00-1a3c-11f1-bbbf-53fdf1f5f2d8
+     └── Price: 10.00 DKK
+     ├── Variant: Minttu
+     │   Variant UUID: 0b529f00-1a3c-11f1-a121-cb92a8b15b2d
+     └── Price: 10.00 DKK
+     ├── Variant: Passoa
+     │   Variant UUID: 0b529f00-1a3c-11f1-962c-5368abb265a9
+     └── Price: 10.00 DKK
+     ├── Variant: Pisang Ambon
+     │   Variant UUID: 0b529f00-1a3c-11f1-9191-3edffc4bae10
+     └── Price: 10.00 DKK
+     ├── Variant: Råstoff Salty Caramel
+     │   Variant UUID: 0b529f00-1a3c-11f1-a20f-26ab4b661f4d
+     └── Price: 10.00 DKK
+     ├── Variant: Råstoff Strawberry
+     │   Variant UUID: 0b529f00-1a3c-11f1-bd85-704de3b4fea2
+     └── Price: 10.00 DKK
+     ├── Variant: Sambuca
+     │   Variant UUID: 0b529f00-1a3c-11f1-af4f-0a2705a95405
+     └── Price: 10.00 DKK
+     ├── Variant: Små Fugle
+     │   Variant UUID: 0b529f00-1a3c-11f1-add9-fbc412ddcd0d
+     └── Price: 10.00 DKK
+     ├── Variant: Vodka
+     │   Variant UUID: 0b529f00-1a3c-11f1-a94b-384f2c85100a
+     └── Price: 10.00 DKK
+
+📌 Product: Spin med hjulet
+   Product UUID: b448da40-ade7-11f1-9918-c4d880d953f6
+     ├── Variant: None
+     │   Variant UUID: b449ebb0-ade7-11f1-949b-e43cf91fac4b
+     └── Price: 25.00 DKK
+
+📌 Product: Classic Drinks
+   Product UUID: ab79bd40-d7ec-11ee-8119-48b88a37d3ba
+     ├── Variant: None
+     │   Variant UUID: ab79bd40-d7ec-11ee-8db5-72ce109fb554
+     └── Price: 30.00 DKK
+
+📌 Product: Galla Drinks
+   Product UUID: c42fe4a0-bf2d-11ed-b6b9-13eba334c7bf
+     ├── Variant: None
+     │   Variant UUID: c4300bb0-bf2d-11ed-8a3b-3b6a57a19b0f
+     └── Price: 30.00 DKK
+
+📌 Product: Sodavand
+   Product UUID: 8b86e510-0695-11ec-b848-72b5c14d40ae
+     ├── Variant: Fanta
+     │   Variant UUID: 7695fa70-34ed-11f1-9001-363e24100830
+     └── Price: 10.00 DKK
+     ├── Variant: Cocio
+     │   Variant UUID: 7695fa70-34ed-11f1-b76e-a0bdb0824162
+     └── Price: 10.00 DKK
+     ├── Variant: Faxe Kodi
+     │   Variant UUID: 7695fa70-34ed-11f1-8843-7dedd34f4d99
+     └── Price: 10.00 DKK
+     ├── Variant: Coca Cola
+     │   Variant UUID: 7695fa70-34ed-11f1-a38e-0018fccc5c69
+     └── Price: 10.00 DKK
+     ├── Variant: Tuborg Squash
+     │   Variant UUID: 7695fa70-34ed-11f1-bc1c-1f0e46d6950b
+     └── Price: 10.00 DKK
+     ├── Variant: Sprite
+     │   Variant UUID: 7695fa70-34ed-11f1-b5d3-5bf7fc68a767
+     └── Price: 10.00 DKK
+     ├── Variant: Scweppes Lemon
+     │   Variant UUID: 7695fa70-34ed-11f1-9755-b148553e9984
+     └── Price: 10.00 DKK
+     ├── Variant: Scweppes Tonic
+     │   Variant UUID: 7695fa70-34ed-11f1-8ddc-666842844505
+     └── Price: 10.00 DKK
+     ├── Variant: Ginger Beer
+     │   Variant UUID: 7695fa70-34ed-11f1-8e82-7de27ec00287
+     └── Price: 10.00 DKK
+
+📌 Product: Det dee
+   Product UUID: e7a17fb0-edc0-11f0-af68-ed03ff800905
+     ├── Variant: None
+     │   Variant UUID: e7a6afd0-edc0-11f0-bde9-a46413e5d8f8
+     └── Price: 69.00 DKK
+
+📌 Product: Tårn
+   Product UUID: f01e0a10-e652-11ec-96b6-07a0e7b56c2a
+     ├── Variant: Mad på Fad
+     │   Variant UUID: f931a5d0-e652-11ec-96b6-07a0e7b56c2a
+     └── Price: 60.00 DKK
+     ├── Variant: Grøn Tuborg
+     │   Variant UUID: faa029f0-e652-11ec-96b6-07a0e7b56c2a
+     └── Price: 75.00 DKK
+     ├── Variant: Tuborg Classic
+     │   Variant UUID: fc5c7ff0-e652-11ec-96b6-07a0e7b56c2a
+     └── Price: 75.00 DKK
+     ├── Variant: Krononbourg 1664 Blanc
+     │   Variant UUID: 085624a0-e653-11ec-96b6-07a0e7b56c2a
+     └── Price: 85.00 DKK
+
+📌 Product: Juice
+   Product UUID: d74a70c0-4663-11ed-a39b-e4852b46e313
+     ├── Variant: Cranberry
+     │   Variant UUID: f3dac1e0-4663-11ed-a1e0-3bb09145da11
+     └── Price: 10.00 DKK
+     ├── Variant: Grape
+     │   Variant UUID: f3dac1e0-4663-11ed-8f59-d11edc75099d
+     └── Price: 10.00 DKK
+     ├── Variant: Ananas
+     │   Variant UUID: f3dac1e0-4663-11ed-90a6-0289457cfcfe
+     └── Price: 10.00 DKK
+
+📌 Product: Flaskeøl
+   Product UUID: 9d8f96f0-e653-11ec-999a-d5dbdabf168d
+     ├── Variant: Grøn Tuborg
+     │   Variant UUID: a8878310-e653-11ec-999a-d5dbdabf168d
+     └── Price: 15.00 DKK
+     ├── Variant: Tuborg Classic
+     │   Variant UUID: a9e872a0-e653-11ec-999a-d5dbdabf168d
+     └── Price: 15.00 DKK
+     ├── Variant: Guld Tuborg
+     │   Variant UUID: ac4686e0-e653-11ec-999a-d5dbdabf168d
+     └── Price: 18.00 DKK
+     ├── Variant: Tuborg Påskebryg
+     │   Variant UUID: fcf46f80-34ec-11f1-aff0-d0ecb1aece87
+     └── Price: 15.00 DKK
+     ├── Variant: Tuborg Julebryg
+     │   Variant UUID: 1ee860f0-9b62-11ee-a715-37bef6b1d1d6
+     └── Price: 12.00 DKK
+     ├── Variant: Nordic
+     │   Variant UUID: 52f21c40-9b7d-11ee-910e-7da21011e933
+     └── Price: 15.00 DKK
+     ├── Variant: Blanc 1664
+     │   Variant UUID: c90d4f20-595c-11ee-9d67-83973f362f79
+     └── Price: 20.00 DKK
+
+📌 Product: Somersby
+   Product UUID: da29fb00-05d5-11ec-a687-47812d6ba823
+     ├── Variant: Apple
+     │   Variant UUID: ce915320-e652-11ec-96b6-07a0e7b56c2a
+     └── Price: 18.00 DKK
+     ├── Variant: Elderflower
+     │   Variant UUID: d03a6f40-e652-11ec-96b6-07a0e7b56c2a
+     └── Price: 18.00 DKK
+     ├── Variant: Blackberry
+     │   Variant UUID: 8a00de00-595c-11ee-9d67-83973f362f79
+     └── Price: 18.00 DKK
+     ├── Variant: Mango
+     │   Variant UUID: 01a07340-615d-11ef-a61c-586c9bea441a
+     └── Price: 18.00 DKK
+     ├── Variant: Red Rhubarb
+     │   Variant UUID: fd5af130-f8ec-11ee-a230-c7b8a431881a
+     └── Price: 18.00 DKK
+
+📌 Product: Mocktail
+   Product UUID: 150ca010-00cd-11f0-84f5-777a94851cda
+     ├── Variant: Radler
+     │   Variant UUID: 350d38c0-00cd-11f0-9d0c-5bd52ad64311
+     └── Price: 20.00 DKK
+     ├── Variant: Kolding
+     │   Variant UUID: 350d38c0-00cd-11f0-9c69-01ecca653248
+     └── Price: 20.00 DKK
+
+📌 Product: Shot
+   Product UUID: 7308efb0-c4df-11ed-9590-b5f2e57da0ec
+     ├── Variant: None
+     │   Variant UUID: 73093dd0-c4df-11ed-8aab-ca137e524fba
+     └── Price: 10.00 DKK
+
+📌 Product: Kop
+   Product UUID: cdf43fb0-bf62-11ed-98ea-adc50c7955c2
+     ├── Variant: None
+     │   Variant UUID: cdf79b10-bf62-11ed-b97d-f77f443fcc53
+     └── Price: 5.00 DKK
+
+📌 Product: Mocktail
+   Product UUID: 3dcb0a40-cf73-11ef-a1ef-1bebcf494462
+     ├── Variant: None
+     │   Variant UUID: 3dcb7f70-cf73-11ef-b550-fd80ffd67c1b
+     └── Price: 10.00 DKK
+
+📌 Product: Míl Spritz
+   Product UUID: 4a974c20-4654-11ed-82be-250d22531544
+     ├── Variant: None
+     │   Variant UUID: 4a97e860-4654-11ed-8b7a-61d8bfae29a8
+     └── Price: 10.00 DKK
+
+📌 Product: Soda / Red Bull
+   Product UUID: 9eab3f90-bf2d-11ed-b09a-2f5f760f691d
+     ├── Variant: None
+     │   Variant UUID: 9eab66a0-bf2d-11ed-a7da-dbe848b62aa1
+     └── Price: 15.00 DKK
+
+📌 Product: 3x Jägerbomb
+   Product UUID: d22b49e0-f10b-11ed-b1e7-5fbf9650979d
+     ├── Variant: None
+     │   Variant UUID: d22b70f0-f10b-11ed-a80e-131cbd6854c4
+     └── Price: 45.00 DKK
+
+📌 Product: Sodavand
+   Product UUID: d04449b0-00cc-11f0-a228-8e8644998500
+     ├── Variant: Coca Cola
+     │   Variant UUID: 113691d0-00cd-11f0-b455-b2ee77407c7d
+     └── Price: 15.00 DKK
+     ├── Variant: Coca Cola Zero
+     │   Variant UUID: 113691d0-00cd-11f0-a836-f3417737fca9
+     └── Price: 15.00 DKK
+     ├── Variant: Schweppes Lemon
+     │   Variant UUID: 113691d0-00cd-11f0-a4f3-eaa52de1939e
+     └── Price: 15.00 DKK
+     ├── Variant: Sprite
+     │   Variant UUID: 113691d0-00cd-11f0-9f1f-2e8c609f080d
+     └── Price: 15.00 DKK
+     ├── Variant: Ginger Beer
+     │   Variant UUID: 113691d0-00cd-11f0-ac6b-dced7587507c
+     └── Price: 15.00 DKK
+     ├── Variant: Red Bull Original
+     │   Variant UUID: 113691d0-00cd-11f0-969e-a896c525c1ed
+     └── Price: 15.00 DKK
+     ├── Variant: Red Bull Sugarfree
+     │   Variant UUID: 113691d0-00cd-11f0-b3c9-495e8fdd50d3
+     └── Price: 15.00 DKK
+
+📌 Product: Breezer
+   Product UUID: bd0c9800-8fe4-11f0-bf63-2b6f11f03723
+     ├── Variant: None
+     │   Variant UUID: bd0cbf10-8fe4-11f0-ab97-3540993ee266
+     └── Price: 18.00 DKK
+
+📌 Product: MPF
+   Product UUID: f84f15d0-fde6-11eb-bfd1-a5adc248b334
+     ├── Variant: None
+     │   Variant UUID: f84f15d1-fde6-11eb-bfd1-a5adc248b334
+     └── Price: 20.00 DKK
+
+📌 Product: Flaske Snaps
+   Product UUID: 9aac59e0-9b66-11ee-adf6-591606f7f125
+     ├── Variant: None
+     │   Variant UUID: 9aaf4010-9b66-11ee-99fb-91f2229dbab7
+     └── Price: 150.00 DKK
+
+📌 Product: Glas vin
+   Product UUID: 94a9c8c0-d7ed-11ee-b7ba-30f8f137348c
+     ├── Variant: None
+     │   Variant UUID: 94aa16e0-d7ed-11ee-b05b-5ffc42391886
+     └── Price: 15.00 DKK
+
+📌 Product: 1 Shot
+   Product UUID: 83dcfaa0-2843-11ec-9d1e-f0c8fadad847
+     ├── Variant: None
+     │   Variant UUID: 83e14060-2843-11ec-84d2-e0f05216c05f
+     └── Price: 10.00 DKK
+
+📌 Product: Smirnoff ICE
+   Product UUID: e804b4a0-fde6-11eb-bfd1-a5adc248b334
+     ├── Variant: None
+     │   Variant UUID: e804b4a1-fde6-11eb-bfd1-a5adc248b334
+     └── Price: 20.00 DKK
+
+📌 Product: mpf
+   Product UUID: 28c88b50-f107-11ed-bac6-f43d231d6209
+     ├── Variant: None
+     │   Variant UUID: 28cc5be0-f107-11ed-a080-1dbce5eaa4fd
+     └── Price: 20.00 DKK
+
+📌 Product: Somersby
+   Product UUID: 3b5669e0-00cd-11f0-acbb-c2733e8d5e46
+     ├── Variant: Apple
+     │   Variant UUID: 7ddebb50-00cd-11f0-9f85-7a8b9c3c36ba
+     └── Price: 20.00 DKK
+     ├── Variant: Elderflower & Lime
+     │   Variant UUID: 7ddebb50-00cd-11f0-b695-ffcd973c9201
+     └── Price: 20.00 DKK
+     ├── Variant: Blackberry
+     │   Variant UUID: 7ddebb50-00cd-11f0-b251-906417ebce42
+     └── Price: 20.00 DKK
+
+📌 Product: Gløgg
+   Product UUID: 8ff1cf70-8fe4-11f0-b2b1-2dc12e785c84
+     ├── Variant: None
+     │   Variant UUID: 8ff7c2e0-8fe4-11f0-a575-5d97c51eb952
+     └── Price: 15.00 DKK
+
+📌 Product: 5x Jägerbomb
+   Product UUID: fb1cbbf0-53e3-11ee-92f7-77503aa15be8
+     ├── Variant: None
+     │   Variant UUID: fb201750-53e3-11ee-bd96-301f26cefff4
+     └── Price: 65.00 DKK
+
+📌 Product: Drinks
+   Product UUID: 07148540-595d-11ee-9d67-83973f362f79
+     ├── Variant: Lille Fysiker
+     │   Variant UUID: 13fbe550-595d-11ee-9d67-83973f362f79
+     └── Price: 70.00 DKK
+     ├── Variant: Astronaut
+     │   Variant UUID: 16de92e0-595d-11ee-9d67-83973f362f79
+     └── Price: 30.00 DKK
+     ├── Variant: Love Potion
+     │   Variant UUID: 195d2770-595d-11ee-9d67-83973f362f79
+     └── Price: 30.00 DKK
+     ├── Variant: Gin Hass
+     │   Variant UUID: 1ad807a0-595d-11ee-9d67-83973f362f79
+     └── Price: 20.00 DKK
+     ├── Variant: Gin Tonic
+     │   Variant UUID: 20817650-595d-11ee-9d67-83973f362f79
+     └── Price: 20.00 DKK
+     ├── Variant: Rom & Cola
+     │   Variant UUID: 21f2e0a0-595d-11ee-9d67-83973f362f79
+     └── Price: 20.00 DKK
+     ├── Variant: Vodka Redbull
+     │   Variant UUID: 453f9710-595d-11ee-9d67-83973f362f79
+     └── Price: 25.00 DKK
+
+📌 Product: Fadøl
+   Product UUID: 6b500af0-e651-11ec-b126-5d8e1d219adc
+     ├── Variant: Grøn Tuborg
+     │   Variant UUID: ee189290-e651-11ec-b126-5d8e1d219adc
+     └── Price: 20.00 DKK
+     ├── Variant: Tuborg Classic
+     │   Variant UUID: efc4bbf0-e651-11ec-b126-5d8e1d219adc
+     └── Price: 20.00 DKK
+
+📌 Product: Red Bull
+   Product UUID: 91a3e540-2843-11ec-a0fe-abf2e575df3a
+     ├── Variant: None
+     │   Variant UUID: 91a71990-2843-11ec-9513-3151fc624b41
+     └── Price: 15.00 DKK
+
+📌 Product: Cocktail
+   Product UUID: 23713c30-00cb-11f0-b25a-347407dbf622
+     ├── Variant: Gin & Tonic
+     │   Variant UUID: a87d9950-00cb-11f0-841b-433d17591db9
+     └── Price: 25.00 DKK
+     ├── Variant: Gin Hass
+     │   Variant UUID: a87d9950-00cb-11f0-9984-1cd3c64559c7
+     └── Price: 25.00 DKK
+     ├── Variant: Rum & Coke
+     │   Variant UUID: a87d9950-00cb-11f0-8c47-d7a40aa2d094
+     └── Price: 25.00 DKK
+     ├── Variant: Vodka & Red Bull
+     │   Variant UUID: a87d7240-00cb-11f0-9927-e2811e17c982
+     └── Price: 25.00 DKK
+     ├── Variant: Astronaut
+     │   Variant UUID: a87d7240-00cb-11f0-8624-0862e3544568
+     └── Price: 25.00 DKK
+     ├── Variant: Dark & Stormy
+     │   Variant UUID: a87d7240-00cb-11f0-971c-5c4cff5a64bc
+     └── Price: 25.00 DKK
+     ├── Variant: Love Potion
+     │   Variant UUID: a87d7240-00cb-11f0-85ce-2c92bcb24898
+     └── Price: 25.00 DKK
+     ├── Variant: Little Physicist
+     │   Variant UUID: a87d7240-00cb-11f0-93c6-68ab1e16c01b
+     └── Price: 70.00 DKK
+
+📌 Product: Classic Drinks
+   Product UUID: 2df3da80-e654-11ec-88a4-63c3f541819b
+     ├── Variant: Gin & Tonic
+     │   Variant UUID: 3f43ebe0-e654-11ec-88a4-63c3f541819b
+     └── Price: 25.00 DKK
+     ├── Variant: Gin Hash
+     │   Variant UUID: 41438c70-e654-11ec-88a4-63c3f541819b
+     └── Price: 25.00 DKK
+     ├── Variant: Rum & Coke
+     │   Variant UUID: 43459e00-e654-11ec-88a4-63c3f541819b
+     └── Price: 25.00 DKK
+     ├── Variant: Icebear
+     │   Variant UUID: 4b38d5a0-e654-11ec-88a4-63c3f541819b
+     └── Price: 25.00 DKK
+     ├── Variant: Vodka & Red Bull
+     │   Variant UUID: 4ed53640-e654-11ec-88a4-63c3f541819b
+     └── Price: 25.00 DKK
+
+📌 Product: Prosecco
+   Product UUID: 0c814ff0-cf71-11ef-8314-65c6b912fb72
+     ├── Variant: None
+     │   Variant UUID: 0c814ff0-cf71-11ef-a52c-425fd163a29a
+     └── Price: 69.00 DKK
+
+📌 Product: Galla Specials
+   Product UUID: 4c61fa80-d7eb-11ee-81ea-65f89c21b0cd
+     ├── Variant: None
+     │   Variant UUID: 4c61fa80-d7eb-11ee-9319-f1165dfc6e0a
+     └── Price: 35.00 DKK
+
+📌 Product: flügel
+   Product UUID: d79fe920-9e5a-11ed-9415-76854b87eb1f
+     ├── Variant: None
+     │   Variant UUID: d7a01030-9e5a-11ed-b005-ea191b69b9d3
+     └── Price: 15.00 DKK
+
+📌 Product: Fustage-drinks
+   Product UUID: 54eb2260-e654-11ec-827e-bb81b0980bdb
+     ├── Variant: Astronaut
+     │   Variant UUID: 7004d910-e654-11ec-827e-bb81b0980bdb
+     └── Price: 35.00 DKK
+     ├── Variant: Seabreeze
+     │   Variant UUID: 7282aa50-e654-11ec-827e-bb81b0980bdb
+     └── Price: 35.00 DKK
+     ├── Variant: Dark 'n' Stormy
+     │   Variant UUID: 780fb760-e654-11ec-827e-bb81b0980bdb
+     └── Price: 35.00 DKK
+     ├── Variant: Mojito
+     │   Variant UUID: 7a64f200-e654-11ec-827e-bb81b0980bdb
+     └── Price: 35.00 DKK
+
+📌 Product: Mocktails
+   Product UUID: 8f8250c0-d7ec-11ee-91df-723c9135c7e0
+     ├── Variant: None
+     │   Variant UUID: 8f8277d0-d7ec-11ee-976f-efb3d453da19
+     └── Price: 20.00 DKK
+
+============================================================
