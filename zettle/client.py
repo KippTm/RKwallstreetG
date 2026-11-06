@@ -286,7 +286,10 @@ class ZettleClient:
         if headers:
             req_headers.update(headers)
 
-        url = f"{self.base_url}/{path.lstrip('/')}"
+        if path.startswith("http://") or path.startswith("https://"):
+            url = path
+        else:
+            url = f"{self.base_url}/{path.lstrip('/')}"
 
         try:
             response = requests.request(

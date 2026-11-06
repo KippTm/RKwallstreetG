@@ -33,6 +33,60 @@
             </div>
         </header>
 
+        <!-- Automated Ticker Control Panel -->
+        <div class="bg-slate-900 border border-slate-700 rounded-lg p-5 shadow-lg space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-base border border-emerald-500/30">
+                        <i class="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                            Automated Market Ticker
+                            <span id="tickerStatusBadge" class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">Checking...</span>
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Polls purchases from Zettle API cursor, builds sales vectors, runs prediction engine, and pushes updates.</p>
+                    </div>
+                </div>
+
+                <!-- Ticker Control Actions -->
+                <div class="flex items-center gap-2">
+                    <button id="btnToggleTicker" onclick="toggleTicker()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-medium text-xs transition flex items-center gap-1.5 shadow">
+                        <i class="fa-solid fa-play"></i> Start Ticker
+                    </button>
+                    <button onclick="triggerImmediateTick()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded text-xs transition flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt text-amber-400"></i> Run Tick Now
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ticker Stats & Interval Configuration -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs">
+                <div class="bg-slate-950/60 p-3 rounded border border-slate-800">
+                    <span class="text-slate-400 block text-[11px] mb-1">Tick Interval (Minutes)</span>
+                    <div class="flex items-center gap-2">
+                        <input type="number" id="inputIntervalMinutes" min="0.5" step="0.5" value="2.0" class="w-20 bg-slate-900 border border-slate-700 rounded px-2 py-1 text-white font-mono text-xs focus:border-emerald-500">
+                        <button onclick="updateTickerInterval()" class="px-2 py-1 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded text-[11px] border border-slate-700">Set</button>
+                    </div>
+                </div>
+
+                <div class="bg-slate-950/60 p-3 rounded border border-slate-800">
+                    <span class="text-slate-400 block text-[11px] mb-1">Last Run</span>
+                    <span id="statLastRun" class="font-mono text-slate-200 font-semibold truncate block">Never</span>
+                </div>
+
+                <div class="bg-slate-950/60 p-3 rounded border border-slate-800">
+                    <span class="text-slate-400 block text-[11px] mb-1">Last Purchases Polled</span>
+                    <span id="statLastPurchases" class="font-mono text-emerald-400 font-semibold">0 items</span>
+                </div>
+
+                <div class="bg-slate-950/60 p-3 rounded border border-slate-800">
+                    <span class="text-slate-400 block text-[11px] mb-1">Total Ticks / Bank</span>
+                    <span id="statTotalTicks" class="font-mono text-white font-semibold">#0 (0.00 kr)</span>
+                </div>
+            </div>
+        </div>
+
         <div class="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden shadow-lg">
             <div class="overflow-x-auto">
                 <table class="w-full text-left text-sm whitespace-nowrap">
@@ -119,8 +173,91 @@
             }
         }
 
+        let tickerRunning = false;
+
+        async function fetchTickerStatus() {
+            try {
+                const res = await fetch('/api/engine/ticker/status');
+                const data = await res.json();
+                tickerRunning = data.is_running;
+
+                const badge = document.getElementById('tickerStatusBadge');
+                const btn = document.getElementById('btnToggleTicker');
+
+                if (tickerRunning) {
+                    badge.className = 'text-xs px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-mono inline-flex items-center gap-1.5';
+                    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> RUNNING (${data.interval_minutes}m)`;
+                    btn.className = 'px-4 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded font-medium text-xs transition flex items-center gap-1.5 shadow';
+                    btn.innerHTML = `<i class="fa-solid fa-pause"></i> Pause Ticker`;
+                } else {
+                    badge.className = 'text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono inline-flex items-center gap-1.5';
+                    badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-slate-500"></span> PAUSED`;
+                    btn.className = 'px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white rounded font-medium text-xs transition flex items-center gap-1.5 shadow';
+                    btn.innerHTML = `<i class="fa-solid fa-play"></i> Start Ticker`;
+                }
+
+                document.getElementById('inputIntervalMinutes').value = data.interval_minutes;
+                document.getElementById('statLastRun').textContent = data.last_run ? data.last_run.split('T')[1] || data.last_run : 'Never';
+                document.getElementById('statLastPurchases').textContent = `${data.last_purchases_count} items`;
+                document.getElementById('statTotalTicks').textContent = `#${data.total_ticks} (${data.bank_balance >= 0 ? '+' : ''}${data.bank_balance} kr)`;
+            } catch (err) {
+                console.error("Failed to load ticker status", err);
+            }
+        }
+
+        async function toggleTicker() {
+            try {
+                if (tickerRunning) {
+                    await fetch('/api/engine/ticker/pause', { method: 'POST' });
+                } else {
+                    const mins = parseFloat(document.getElementById('inputIntervalMinutes').value) || 2.0;
+                    await fetch('/api/engine/ticker/start', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ interval_minutes: mins })
+                    });
+                }
+                fetchTickerStatus();
+            } catch (err) {
+                alert("Error toggling ticker: " + err.message);
+            }
+        }
+
+        async function updateTickerInterval() {
+            const mins = parseFloat(document.getElementById('inputIntervalMinutes').value);
+            if (isNaN(mins) || mins <= 0) return alert("Please enter a valid positive number of minutes");
+
+            try {
+                await fetch('/api/engine/ticker/interval', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ interval_minutes: mins })
+                });
+                fetchTickerStatus();
+            } catch (err) {
+                alert("Failed to update interval: " + err.message);
+            }
+        }
+
+        async function triggerImmediateTick() {
+            try {
+                const btn = event.currentTarget;
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> Running...`;
+                await fetch('/api/engine/ticker/tick', { method: 'POST' });
+                await fetchTickerStatus();
+                await fetchCatalog();
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-bolt text-amber-400"></i> Run Tick Now`;
+            } catch (err) {
+                alert("Tick execution failed: " + err.message);
+            }
+        }
+
         fetchCatalog();
+        fetchTickerStatus();
         setInterval(fetchCatalog, 10000);
+        setInterval(fetchTickerStatus, 4000);
     </script>
 </body>
 </html>
