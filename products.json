@@ -1,6 +1,8 @@
 [
   {
     "product_name": "Lille Fysiker",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "76e181b0-b17e-11ee-9ce7-1632a686ce89",
     "original_price": 70.0,
     "product_uuids": [
@@ -10,6 +12,8 @@
   },
   {
     "product_name": "Love Potion",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "04bfc130-b180-11ee-91a6-dd16006a37a3",
     "original_price": 30.0,
     "product_uuids": [
@@ -19,6 +23,8 @@
   },
   {
     "product_name": "Koldskål",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "04bfc130-b180-11ee-b9cd-3c18d4cc3b95",
     "original_price": 30.0,
     "product_uuids": [
@@ -28,6 +34,8 @@
   },
   {
     "product_name": "Astronaut",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "89a8d590-71b4-11ef-abb5-fba88d9d8235",
     "original_price": 30.0,
     "product_uuids": [
@@ -37,6 +45,8 @@
   },
   {
     "product_name": "Vodka & Red Bull",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "0423d9b0-9b63-11ee-a715-37bef6b1d1d6",
     "original_price": 25.0,
     "product_uuids": [
@@ -46,6 +56,8 @@
   },
   {
     "product_name": "Dark & Stormy",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "0b3b0930-9b63-11ee-a715-37bef6b1d1d6",
     "original_price": 20.0,
     "product_uuids": [
@@ -55,6 +67,8 @@
   },
   {
     "product_name": "Rum & Coke",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "0d86a6e0-9b63-11ee-a715-37bef6b1d1d6",
     "original_price": 20.0,
     "product_uuids": [
@@ -65,6 +79,8 @@
   },
   {
     "product_name": "Gin & Tonic",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "11110620-9b63-11ee-a715-37bef6b1d1d6",
     "original_price": 20.0,
     "product_uuids": [
@@ -74,6 +90,8 @@
   },
   {
     "product_name": "Gin Hass",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "136d6cb0-9b63-11ee-a715-37bef6b1d1d6",
     "original_price": 20.0,
     "product_uuids": [
@@ -83,6 +101,8 @@
   },
   {
     "product_name": "Isbjørn",
+    "matching": "variant",
+    "type": "Drink",
     "variant_uuid": "89a8d590-71b4-11ef-83bf-3c08bc62f84c",
     "original_price": 20.0,
     "product_uuids": [
@@ -92,6 +112,8 @@
   },
   {
     "product_name": "Grøn",
+    "matching": "variant",
+    "type": "Fadøl",
     "variant_uuid": "c2719090-615d-11ef-acc3-14049801124b",
     "original_price": 20.0,
     "product_uuids": [
@@ -101,6 +123,8 @@
   },
   {
     "product_name": "Classic",
+    "matching": "variant",
+    "type": "Fadøl",
     "variant_uuid": "c2719090-615d-11ef-af9f-b54d90da7bc3",
     "original_price": 20.0,
     "product_uuids": [
@@ -109,52 +133,9 @@
     "min_price": 10.0
   },
   {
-    "product_name": "Blanc",
-    "variant_uuid": "c2719090-615d-11ef-ad19-a67657395ed1",
-    "original_price": 25.0,
-    "product_uuids": [
-      "9238f730-d7ea-11ee-9974-20fd4078bb71"
-    ],
-    "min_price": 15.0
-  },
-  {
-    "product_name": "Billig Collada",
-    "variant_uuid": "40fdd920-61e0-11ed-b761-5da419ef5885",
-    "original_price": 25.0,
-    "product_uuids": [
-      "ccf2d120-61df-11ed-a77f-c6fff8d76a65"
-    ],
-    "min_price": 15.0
-  },
-  {
-    "product_name": "After 8",
-    "variant_uuid": "40fdd920-61e0-11ed-966a-619aebd9555e",
-    "original_price": 25.0,
-    "product_uuids": [
-      "ccf2d120-61df-11ed-a77f-c6fff8d76a65"
-    ],
-    "min_price": 15.0
-  },
-  {
-    "product_name": "Skumbanan",
-    "variant_uuid": "40fdd920-61e0-11ed-8873-fdc91afb0891",
-    "original_price": 35.0,
-    "product_uuids": [
-      "ccf2d120-61df-11ed-a77f-c6fff8d76a65"
-    ],
-    "min_price": 20.0
-  },
-  {
-    "product_name": "Classic Drinks",
-    "variant_uuid": "ab79bd40-d7ec-11ee-8db5-72ce109fb554",
-    "original_price": 30.0,
-    "product_uuids": [
-      "ab79bd40-d7ec-11ee-8119-48b88a37d3ba"
-    ],
-    "min_price": 20.0
-  },
-  {
     "product_name": "Grøn Tuborg",
+    "matching": "variant",
+    "type": "Flaske Øl",
     "variant_uuid": "a8878310-e653-11ec-999a-d5dbdabf168d",
     "original_price": 15.0,
     "product_uuids": [
@@ -164,6 +145,8 @@
   },
   {
     "product_name": "Tuborg Classic",
+    "matching": "variant",
+    "type": "Flaske Øl",
     "variant_uuid": "a9e872a0-e653-11ec-999a-d5dbdabf168d",
     "original_price": 15.0,
     "product_uuids": [
@@ -173,6 +156,8 @@
   },
   {
     "product_name": "Guld Tuborg",
+    "matching": "variant",
+    "type": "Flaske Øl",
     "variant_uuid": "ac4686e0-e653-11ec-999a-d5dbdabf168d",
     "original_price": 18.0,
     "product_uuids": [
@@ -182,6 +167,8 @@
   },
   {
     "product_name": "Nordic",
+    "matching": "variant",
+    "type": "Flaske Øl",
     "variant_uuid": "52f21c40-9b7d-11ee-910e-7da21011e933",
     "original_price": 15.0,
     "product_uuids": [
@@ -191,6 +178,8 @@
   },
   {
     "product_name": "Blanc 1664",
+    "matching": "variant",
+    "type": "Flaske Øl",
     "variant_uuid": "c90d4f20-595c-11ee-9d67-83973f362f79",
     "original_price": 20.0,
     "product_uuids": [
@@ -199,16 +188,9 @@
     "min_price": 12.0
   },
   {
-    "product_name": "Radler",
-    "variant_uuid": "350d38c0-00cd-11f0-9d0c-5bd52ad64311",
-    "original_price": 20.0,
-    "product_uuids": [
-      "150ca010-00cd-11f0-84f5-777a94851cda"
-    ],
-    "min_price": 12.0
-  },
-  {
     "product_name": "Kolding",
+    "matching": "product",
+    "type": "Mocktails",
     "variant_uuid": "350d38c0-00cd-11f0-9c69-01ecca653248",
     "original_price": 20.0,
     "product_uuids": [
@@ -218,6 +200,8 @@
   },
   {
     "product_name": "Shot",
+    "matching": "product",
+    "type": "Shot",
     "variant_uuid": "73093dd0-c4df-11ed-8aab-ca137e524fba",
     "original_price": 10.0,
     "product_uuids": [
@@ -229,6 +213,8 @@
   },
   {
     "product_name": "Soda / Red Bull",
+    "matching": "product",
+    "type": "Vand",
     "variant_uuid": "9eab66a0-bf2d-11ed-a7da-dbe848b62aa1",
     "original_price": 15.0,
     "product_uuids": [
@@ -238,6 +224,8 @@
   },
   {
     "product_name": "3x Jägerbomb",
+    "matching": "product",
+    "type": "Bombs",
     "variant_uuid": "d22b70f0-f10b-11ed-a80e-131cbd6854c4",
     "original_price": 45.0,
     "product_uuids": [
@@ -247,6 +235,8 @@
   },
   {
     "product_name": "Red Bull Original",
+    "matching": "product",
+    "type": "Vand",
     "variant_uuid": "113691d0-00cd-11f0-969e-a896c525c1ed",
     "original_price": 15.0,
     "product_uuids": [
@@ -257,6 +247,8 @@
   },
   {
     "product_name": "5x Jägerbomb",
+    "matching": "product",
+    "type": "Bombs",
     "variant_uuid": "fb201750-53e3-11ee-bd96-301f26cefff4",
     "original_price": 65.0,
     "product_uuids": [
