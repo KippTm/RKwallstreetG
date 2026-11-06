@@ -1,1 +1,120 @@
-# I will be an admin panel
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall Street Bar - Admin Engine</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background-color: #0f172a; color: #e2e8f0; }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto space-y-6">
+        <header class="flex justify-between items-center border-b border-slate-700 pb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-emerald-400"><i class="fa-solid fa-server mr-2"></i>Engine Admin Portal</h1>
+                <p class="text-sm text-slate-400 mt-1">Manage continuous pricing, overrides, and market resets.</p>
+            </div>
+            <div class="space-x-3">
+                <button onclick="triggerEngine()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded shadow transition">
+                    <i class="fa-solid fa-play text-emerald-400 mr-2"></i>Run Engine
+                </button>
+                <button onclick="resetPrices()" class="px-4 py-2 bg-rose-900/50 hover:bg-rose-900 border border-rose-700 rounded shadow transition">
+                    <i class="fa-solid fa-rotate-left text-rose-400 mr-2"></i>Reset All to Original
+                </button>
+            </div>
+        </header>
+
+        <div class="bg-slate-900 border border-slate-700 rounded-lg overflow-hidden shadow-lg">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm whitespace-nowrap">
+                    <thead>
+                        <tr class="bg-slate-800 border-b border-slate-700">
+                            <th class="px-4 py-3 font-semibold text-slate-300">Product</th>
+                            <th class="px-4 py-3 font-semibold text-slate-300">Base Price</th>
+                            <th class="px-4 py-3 font-semibold text-slate-300">Current Price</th>
+                            <th class="px-4 py-3 font-semibold text-slate-300">Bounds (Min-Max)</th>
+                            <th class="px-4 py-3 font-semibold text-slate-300">Manual Override</th>
+                        </tr>
+                    </thead>
+                    <tbody id="catalog-body" class="divide-y divide-slate-800">
+                        <tr><td colspan="5" class="px-4 py-8 text-center text-slate-500">Loading catalog...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchCatalog() {
+            try {
+                const res = await fetch('/api/catalog/managed');
+                const data = await res.json();
+                renderTable(data);
+            } catch (err) {
+                console.error("Failed to load catalog", err);
+            }
+        }
+
+        function renderTable(products) {
+            const tbody = document.getElementById('catalog-body');
+            tbody.innerHTML = products.map(p => {
+                const isAltered = p.current_price !== p.original_price;
+                const statusColor = isAltered ? (p.current_price > p.original_price ? 'text-emerald-400' : 'text-rose-400') : 'text-slate-400';
+                
+                return `
+                    <tr class="hover:bg-slate-800/50 transition-colors">
+                        <td class="px-4 py-3 font-medium text-slate-200">
+                            ${p.product_name}
+                            <div class="text-[10px] text-slate-500 truncate w-32" title="${p.variant_uuid}">${p.variant_uuid}</div>
+                        </td>
+                        <td class="px-4 py-3">${p.original_price.toFixed(2)} kr</td>
+                        <td class="px-4 py-3 font-bold ${statusColor}">${p.current_price.toFixed(2)} kr</td>
+                        <td class="px-4 py-3 text-slate-500">${p.min_price} - ${p.max_price}</td>
+                        <td class="px-4 py-3">
+                            <div class="flex items-center gap-2">
+                                <input type="number" id="override-${p.variant_uuid}" step="0.5" value="${p.current_price}" class="w-24 bg-slate-950 border border-slate-700 rounded px-2 py-1 text-slate-200 focus:outline-none focus:border-emerald-500">
+                                <button onclick="submitOverride('${p.variant_uuid}')" class="px-2 py-1 bg-slate-700 hover:bg-slate-600 rounded text-xs transition">Set</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function triggerEngine() {
+            if(!confirm("Run a manual pricing cycle right now?")) return;
+            await fetch('/api/engine/trigger', { method: 'POST' });
+            setTimeout(fetchCatalog, 2000);
+        }
+
+        async function resetPrices() {
+            if(!confirm("DANGER: Reset all prices to their original baseline in Zettle?")) return;
+            await fetch('/api/engine/reset', { method: 'POST' });
+            setTimeout(fetchCatalog, 3000);
+        }
+
+        async function submitOverride(uuid) {
+            const val = parseFloat(document.getElementById(`override-${uuid}`).value);
+            if(isNaN(val)) return alert("Invalid price");
+            
+            try {
+                const res = await fetch('/api/engine/override', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ variant_uuid: uuid, new_price: val })
+                });
+                if(res.ok) fetchCatalog();
+                else alert("Failed to override price");
+            } catch (err) {
+                alert("Network error");
+            }
+        }
+
+        fetchCatalog();
+        setInterval(fetchCatalog, 10000);
+    </script>
+</body>
+</html>
