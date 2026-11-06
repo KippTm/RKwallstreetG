@@ -1,2 +1,6 @@
 requests
+fastapi
+uvicorn
+pandas
+numpy
 python-dotenv
