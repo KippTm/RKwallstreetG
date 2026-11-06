@@ -195,30 +195,56 @@ class MarketTicker:
         )
 
         # 5. Update prices in products.json and push to Zettle
+        #
+        #   matching="variant" → one push: specific product_uuid + variant_uuid
+        #   matching="product" → one push per entry in product_uuids, no variant_uuid
+        #                        (each product UUID is a separate Zettle product whose
+        #                        first/only variant receives the new price)
         updates_made = False
         for p in products:
             var_uuid = p["variant_uuid"]
-            prod_uuid = p.get("product_uuid") or (p.get("product_uuids", [""])[0])
+            matching = p.get("matching", "variant")
 
-            if var_uuid in predicted_prices:
-                new_price = min(predicted_prices[var_uuid], p["max_price"])
-                old_price = p["current_price"]
+            if var_uuid not in predicted_prices:
+                continue
 
-                if new_price != old_price:
-                    p["previous_price"] = old_price
-                    p["current_price"] = new_price
-                    updates_made = True
+            new_price = min(predicted_prices[var_uuid], p["max_price"])
+            old_price = p["current_price"]
 
-                    try:
+            if new_price != old_price:
+                p["previous_price"] = old_price
+                p["current_price"]  = new_price
+                updates_made = True
+
+            try:
+                if matching == "product":
+                    # Push to every product UUID that maps to this market item
+                    prod_uuids = p.get("product_uuids") or (
+                        [p["product_uuid"]] if p.get("product_uuid") else []
+                    )
+                    for prod_uuid in prod_uuids:
                         update_product_price(
                             product_uuid=prod_uuid,
                             price=new_price,
-                            variant_uuid=var_uuid,
-                            is_cents=False
+                            variant_uuid=None,   # target the first/only variant per product
+                            is_cents=False,
                         )
-                        print(f"[MarketTicker] Pushed price update: {p['product_name']} -> {new_price} kr")
-                    except Exception as ze:
-                        pass
+                    print(
+                        f"[MarketTicker] Pushed price update (product×{len(prod_uuids)}): "
+                        f"{p['product_name']} -> {new_price} kr"
+                    )
+                else:
+                    # matching == "variant": push to one product + explicit variant UUID
+                    prod_uuid = p.get("product_uuid") or (p.get("product_uuids", [""])[0])
+                    update_product_price(
+                        product_uuid=prod_uuid,
+                        price=new_price,
+                        variant_uuid=var_uuid,
+                        is_cents=False,
+                    )
+                    print(f"[MarketTicker] Pushed price update: {p['product_name']} -> {new_price} kr")
+            except Exception as ze:
+                print(f"[MarketTicker] Zettle push failed for {p['product_name']}: {ze}")
 
         if updates_made:
             save_products(products)
