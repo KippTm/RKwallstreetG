@@ -9,21 +9,27 @@ def test_extract_variant_sales():
     sample_purchases = [
         {
             "purchaseUUID": "p-1",
-            "lines": [
+            "products": [
                 {"productUuid": "prod-1", "variantUuid": "var-1", "quantity": 3},
                 {"productUuid": "prod-2", "variantUuid": "var-2", "quantity": 1},
             ],
         },
         {
             "purchaseUUID": "p-2",
-            "lines": [
+            "products": [
                 {"productUuid": "prod-1", "variantUuid": "var-1", "quantity": 2},
             ],
         },
     ]
-    sales = extract_variant_sales(sample_purchases)
-    assert sales["var-1"] == 5.0
-    assert sales["var-2"] == 1.0
+    by_variant, by_product = extract_variant_sales(sample_purchases)
+
+    # variant matching
+    assert by_variant["var-1"] == 5.0
+    assert by_variant["var-2"] == 1.0
+
+    # product matching
+    assert by_product["prod-1"] == 5.0
+    assert by_product["prod-2"] == 1.0
 
 def test_ticker_status_and_controls():
     # Check status endpoint

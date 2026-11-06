@@ -76,9 +76,19 @@ def get_purchases(
     return {"purchases": [], "lastPurchaseHash": None, "linkHeader": None}
 
 
-def extract_variant_sales(purchases: List[Dict[str, Any]]) -> Dict[str, float]:
+def extract_variant_sales(
+    purchases: List[Dict[str, Any]],
+) -> tuple[Dict[str, float], Dict[str, float]]:
     """
-    Aggregate units sold per variant UUID from a list of Zettle purchases.
+    Aggregate units sold per variant UUID and per product UUID from a list of
+    Zettle purchases.
+
+    Some products.json entries use ``"matching": "variant"`` and should be
+    looked up by their ``variantUuid``; others use ``"matching": "product"``
+    and should be summed across *all* variants belonging to the same
+    ``productUuid`` (covering products whose Zettle catalogue entry has
+    multiple variants / multiple product UUIDs that all count as the same
+    market item).
 
     Parameters
     ----------
@@ -87,28 +97,41 @@ def extract_variant_sales(purchases: List[Dict[str, Any]]) -> Dict[str, float]:
 
     Returns
     -------
-    dict
-        Mapping of variant_uuid (str) -> total units sold (float).
+    by_variant : dict[str, float]
+        variant_uuid -> total units sold.
+    by_product : dict[str, float]
+        product_uuid -> total units sold (all variant lines summed).
     """
-    volume: Dict[str, float] = {}
+    by_variant: Dict[str, float] = {}
+    by_product: Dict[str, float] = {}
 
     for purchase in purchases:
-        # Zettle purchases v2 includes a 'products' list per purchase
-        products = purchase.get("products") or purchase.get("items") or purchase.get("lines") or []
-        for item in products:
+        lines = (
+            purchase.get("products")
+            or purchase.get("items")
+            or purchase.get("lines")
+            or []
+        )
+        for item in lines:
             var_uuid = (
                 item.get("variantUuid")
                 or item.get("variant_uuid")
                 or item.get("uuid")
             )
-            if not var_uuid:
-                continue
+            prod_uuid = (
+                item.get("productUuid")
+                or item.get("product_uuid")
+            )
 
             try:
                 qty = float(item.get("quantity", 1.0))
             except (ValueError, TypeError):
                 qty = 1.0
 
-            volume[var_uuid] = volume.get(var_uuid, 0.0) + qty
+            if var_uuid:
+                by_variant[var_uuid] = by_variant.get(var_uuid, 0.0) + qty
 
-    return volume
+            if prod_uuid:
+                by_product[prod_uuid] = by_product.get(prod_uuid, 0.0) + qty
+
+    return by_variant, by_product

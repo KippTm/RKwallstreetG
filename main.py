@@ -153,17 +153,35 @@ class MarketTicker:
             # If in demo/offline mode or credentials not configured yet
             print(f"[MarketTicker] Note on Zettle purchase fetch: {e}")
 
-        # 2. Extract sales quantities per variant UUID
-        variant_sales = extract_variant_sales(purchases)
+        # 2. Extract sales quantities — two dicts keyed by variant and product UUID
+        sales_by_variant, sales_by_product = extract_variant_sales(purchases)
         self.last_purchases_count = len(purchases)
-        self.last_sales_volume = variant_sales
+        self.last_sales_volume = {
+            "by_variant": sales_by_variant,
+            "by_product": sales_by_product,
+        }
 
         # 3. Create corresponding vectors from load_products
+        #    For each product, pick the right sales dict based on the "matching" field:
+        #      "variant"  → look up by variant_uuid in sales_by_variant
+        #      "product"  → sum across all product_uuids in sales_by_product
         uuids          = [p["variant_uuid"] for p in products]
         current_prices = [p["current_price"] for p in products]
         min_prices     = [p["min_price"] for p in products]
         normal_prices  = [p["normal_price"] for p in products]
-        quantities     = [float(variant_sales.get(uid, 0.0)) for uid in uuids]
+
+        quantities = []
+        for p in products:
+            matching = p.get("matching", "variant")
+            if matching == "product":
+                # Sum quantity across every product UUID listed for this item
+                prod_uuids = p.get("product_uuids") or (
+                    [p["product_uuid"]] if p.get("product_uuid") else []
+                )
+                qty = sum(sales_by_product.get(uid, 0.0) for uid in prod_uuids)
+            else:
+                qty = sales_by_variant.get(p["variant_uuid"], 0.0)
+            quantities.append(qty)
 
         # 4. Call the new predictor function
         predicted_prices = predictor.predict_prices(
