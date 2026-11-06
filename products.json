@@ -6,7 +6,13 @@
     "product_uuids": [
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 40.0
+    "min_price": 40.0,
+    "current_price": 70.0,
+    "normal_price": 70.0,
+    "max_price": 140.0,
+    "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
+    "previous_price": 60.41,
+    "tick_diff": -0.47
   },
   {
     "product_name": "Love Potion",
@@ -15,7 +21,13 @@
     "product_uuids": [
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 18.0
+    "min_price": 18.0,
+    "current_price": 30.0,
+    "normal_price": 30.0,
+    "max_price": 60.0,
+    "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
+    "previous_price": 27.84,
+    "tick_diff": -0.06
   },
   {
     "product_name": "Koldskål",
@@ -24,7 +36,13 @@
     "product_uuids": [
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 18.0
+    "min_price": 18.0,
+    "current_price": 30.0,
+    "normal_price": 30.0,
+    "max_price": 60.0,
+    "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
+    "previous_price": 28.42,
+    "tick_diff": -0.01
   },
   {
     "product_name": "Astronaut",
@@ -33,7 +51,13 @@
     "product_uuids": [
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 18.0
+    "min_price": 18.0,
+    "current_price": 30.0,
+    "normal_price": 30.0,
+    "max_price": 60.0,
+    "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
+    "previous_price": 27.42,
+    "tick_diff": -0.22
   },
   {
     "product_name": "Vodka & Red Bull",
@@ -42,7 +66,13 @@
     "product_uuids": [
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 15.0
+    "min_price": 15.0,
+    "current_price": 25.0,
+    "normal_price": 25.0,
+    "max_price": 50.0,
+    "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
+    "previous_price": 23.29,
+    "tick_diff": 0.17
   },
   {
     "product_name": "Dark & Stormy",
@@ -51,7 +81,13 @@
     "product_uuids": [
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 12.0
+    "min_price": 12.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
+    "previous_price": 18.03,
+    "tick_diff": -0.16
   },
   {
     "product_name": "Rum & Coke",
@@ -61,7 +97,13 @@
       "07148540-595d-11ee-9d67-83973f362f79",
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 12.0
+    "min_price": 12.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "07148540-595d-11ee-9d67-83973f362f79",
+    "previous_price": 17.73,
+    "tick_diff": -0.83
   },
   {
     "product_name": "Gin & Tonic",
@@ -70,7 +112,13 @@
     "product_uuids": [
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 12.0
+    "min_price": 12.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
+    "previous_price": 17.72,
+    "tick_diff": 0.22
   },
   {
     "product_name": "Gin Hass",
@@ -79,7 +127,13 @@
     "product_uuids": [
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 12.0
+    "min_price": 12.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
+    "previous_price": 18.24,
+    "tick_diff": -0.39
   },
   {
     "product_name": "Isbjørn",
@@ -88,7 +142,13 @@
     "product_uuids": [
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
-    "min_price": 12.0
+    "min_price": 12.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
+    "previous_price": 17.71,
+    "tick_diff": 0.2
   },
   {
     "product_name": "Grøn",
@@ -97,7 +157,13 @@
     "product_uuids": [
       "9238f730-d7ea-11ee-9974-20fd4078bb71"
     ],
-    "min_price": 10.0
+    "min_price": 10.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "9238f730-d7ea-11ee-9974-20fd4078bb71",
+    "previous_price": 17.13,
+    "tick_diff": -0.45
   },
   {
     "product_name": "Classic",
@@ -106,7 +172,13 @@
     "product_uuids": [
       "9238f730-d7ea-11ee-9974-20fd4078bb71"
     ],
-    "min_price": 10.0
+    "min_price": 10.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "9238f730-d7ea-11ee-9974-20fd4078bb71",
+    "previous_price": 17.46,
+    "tick_diff": -0.54
   },
   {
     "product_name": "Blanc",
@@ -115,7 +187,13 @@
     "product_uuids": [
       "9238f730-d7ea-11ee-9974-20fd4078bb71"
     ],
-    "min_price": 15.0
+    "min_price": 15.0,
+    "current_price": 25.0,
+    "normal_price": 25.0,
+    "max_price": 50.0,
+    "product_uuid": "9238f730-d7ea-11ee-9974-20fd4078bb71",
+    "previous_price": 22.76,
+    "tick_diff": -0.06
   },
   {
     "product_name": "Billig Collada",
@@ -124,7 +202,13 @@
     "product_uuids": [
       "ccf2d120-61df-11ed-a77f-c6fff8d76a65"
     ],
-    "min_price": 15.0
+    "min_price": 15.0,
+    "current_price": 25.0,
+    "normal_price": 25.0,
+    "max_price": 50.0,
+    "product_uuid": "ccf2d120-61df-11ed-a77f-c6fff8d76a65",
+    "previous_price": 22.52,
+    "tick_diff": -0.14
   },
   {
     "product_name": "After 8",
@@ -133,7 +217,13 @@
     "product_uuids": [
       "ccf2d120-61df-11ed-a77f-c6fff8d76a65"
     ],
-    "min_price": 15.0
+    "min_price": 15.0,
+    "current_price": 25.0,
+    "normal_price": 25.0,
+    "max_price": 50.0,
+    "product_uuid": "ccf2d120-61df-11ed-a77f-c6fff8d76a65",
+    "previous_price": 22.86,
+    "tick_diff": 0.14
   },
   {
     "product_name": "Skumbanan",
@@ -142,7 +232,13 @@
     "product_uuids": [
       "ccf2d120-61df-11ed-a77f-c6fff8d76a65"
     ],
-    "min_price": 20.0
+    "min_price": 20.0,
+    "current_price": 35.0,
+    "normal_price": 35.0,
+    "max_price": 70.0,
+    "product_uuid": "ccf2d120-61df-11ed-a77f-c6fff8d76a65",
+    "previous_price": 31.45,
+    "tick_diff": -0.54
   },
   {
     "product_name": "Classic Drinks",
@@ -151,7 +247,13 @@
     "product_uuids": [
       "ab79bd40-d7ec-11ee-8119-48b88a37d3ba"
     ],
-    "min_price": 20.0
+    "min_price": 20.0,
+    "current_price": 30.0,
+    "normal_price": 30.0,
+    "max_price": 60.0,
+    "product_uuid": "ab79bd40-d7ec-11ee-8119-48b88a37d3ba",
+    "previous_price": 26.11,
+    "tick_diff": -1.05
   },
   {
     "product_name": "Grøn Tuborg",
@@ -160,7 +262,13 @@
     "product_uuids": [
       "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
     ],
-    "min_price": 8.0
+    "min_price": 8.0,
+    "current_price": 15.0,
+    "normal_price": 15.0,
+    "max_price": 30.0,
+    "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
+    "previous_price": 12.9,
+    "tick_diff": -0.1
   },
   {
     "product_name": "Tuborg Classic",
@@ -169,7 +277,13 @@
     "product_uuids": [
       "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
     ],
-    "min_price": 8.0
+    "min_price": 8.0,
+    "current_price": 15.0,
+    "normal_price": 15.0,
+    "max_price": 30.0,
+    "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
+    "previous_price": 13.25,
+    "tick_diff": -0.33
   },
   {
     "product_name": "Guld Tuborg",
@@ -178,7 +292,13 @@
     "product_uuids": [
       "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
     ],
-    "min_price": 10.0
+    "min_price": 10.0,
+    "current_price": 18.0,
+    "normal_price": 18.0,
+    "max_price": 36.0,
+    "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
+    "previous_price": 16.16,
+    "tick_diff": -0.43
   },
   {
     "product_name": "Nordic",
@@ -187,7 +307,13 @@
     "product_uuids": [
       "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
     ],
-    "min_price": 8.0
+    "min_price": 8.0,
+    "current_price": 15.0,
+    "normal_price": 15.0,
+    "max_price": 30.0,
+    "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
+    "previous_price": 13.93,
+    "tick_diff": -0.21
   },
   {
     "product_name": "Blanc 1664",
@@ -196,7 +322,13 @@
     "product_uuids": [
       "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
     ],
-    "min_price": 12.0
+    "min_price": 12.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
+    "previous_price": 17.93,
+    "tick_diff": 0.09
   },
   {
     "product_name": "Radler",
@@ -205,7 +337,13 @@
     "product_uuids": [
       "150ca010-00cd-11f0-84f5-777a94851cda"
     ],
-    "min_price": 12.0
+    "min_price": 12.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "150ca010-00cd-11f0-84f5-777a94851cda",
+    "previous_price": 19.01,
+    "tick_diff": -0.31
   },
   {
     "product_name": "Kolding",
@@ -214,7 +352,13 @@
     "product_uuids": [
       "150ca010-00cd-11f0-84f5-777a94851cda"
     ],
-    "min_price": 12.0
+    "min_price": 12.0,
+    "current_price": 20.0,
+    "normal_price": 20.0,
+    "max_price": 40.0,
+    "product_uuid": "150ca010-00cd-11f0-84f5-777a94851cda",
+    "previous_price": 17.8,
+    "tick_diff": -0.37
   },
   {
     "product_name": "Shot",
@@ -225,7 +369,13 @@
       "7308efb0-c4df-11ed-9590-b5f2e57da0ec",
       "5c9af300-1a3a-11f1-9174-6188a42f082c"
     ],
-    "min_price": 5.0
+    "min_price": 5.0,
+    "current_price": 10.0,
+    "normal_price": 10.0,
+    "max_price": 20.0,
+    "product_uuid": "83dcfaa0-2843-11ec-9d1e-f0c8fadad847",
+    "previous_price": 9.34,
+    "tick_diff": -0.1
   },
   {
     "product_name": "Soda / Red Bull",
@@ -234,7 +384,13 @@
     "product_uuids": [
       "9eab3f90-bf2d-11ed-b09a-2f5f760f691d"
     ],
-    "min_price": 10.0
+    "min_price": 10.0,
+    "current_price": 15.0,
+    "normal_price": 15.0,
+    "max_price": 30.0,
+    "product_uuid": "9eab3f90-bf2d-11ed-b09a-2f5f760f691d",
+    "previous_price": 13.96,
+    "tick_diff": -0.09
   },
   {
     "product_name": "3x Jägerbomb",
@@ -243,7 +399,13 @@
     "product_uuids": [
       "d22b49e0-f10b-11ed-b1e7-5fbf9650979d"
     ],
-    "min_price": 22.5
+    "min_price": 22.5,
+    "current_price": 45.0,
+    "normal_price": 45.0,
+    "max_price": 90.0,
+    "product_uuid": "d22b49e0-f10b-11ed-b1e7-5fbf9650979d",
+    "previous_price": 41.6,
+    "tick_diff": -1.78
   },
   {
     "product_name": "Red Bull Original",
@@ -253,7 +415,13 @@
       "d04449b0-00cc-11f0-a228-8e8644998500",
       "91a3e540-2843-11ec-a0fe-abf2e575df3a"
     ],
-    "min_price": 10.0
+    "min_price": 10.0,
+    "current_price": 15.0,
+    "normal_price": 15.0,
+    "max_price": 30.0,
+    "product_uuid": "d04449b0-00cc-11f0-a228-8e8644998500",
+    "previous_price": 13.76,
+    "tick_diff": -0.13
   },
   {
     "product_name": "5x Jägerbomb",
@@ -262,6 +430,12 @@
     "product_uuids": [
       "fb1cbbf0-53e3-11ee-92f7-77503aa15be8"
     ],
-    "min_price": 32.5
-  },
+    "min_price": 32.5,
+    "current_price": 65.0,
+    "normal_price": 65.0,
+    "max_price": 130.0,
+    "product_uuid": "fb1cbbf0-53e3-11ee-92f7-77503aa15be8",
+    "previous_price": 55.7,
+    "tick_diff": -1.42
+  }
 ]

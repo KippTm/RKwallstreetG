@@ -66,9 +66,9 @@
                 <h2 class="text-4xl font-bold neon-green flex items-center gap-4">
                     <i class="fa-solid fa-arrow-trend-up text-3xl"></i> LIVE TRADING
                 </h2>
-                <div class="text-xs text-gray-400 flex gap-10 uppercase tracking-widest font-bold mt-4 sm:mt-0 px-2">
-                    <span>Normal Pris</span>
-                    <span>Aktuel Pris</span>
+                <div class="text-xs text-gray-400 uppercase tracking-widest font-bold mt-4 sm:mt-0 px-2 flex gap-8">
+                    <span>Kurs</span>
+                    <span>&AElig;ndring (Tick)</span>
                 </div>
             </div>
             
@@ -85,6 +85,7 @@
     <!-- Fetch Logic -->
     <script>
         const API_URL = 'http://127.0.0.1:8000/api/catalog/managed';
+        let previousPriceCache = {}; // Cache of variant_uuid -> price from the last tick
         
         function formatPrice(price) {
             return price % 1 === 0 ? price : price.toFixed(2);
@@ -114,32 +115,47 @@
 
             let html = '';
             products.forEach(product => {
-                const orig = product.original_price;
+                const uuid = product.variant_uuid;
                 const curr = product.current_price;
-                const diff = curr - orig;
-                
-                let trendHtml = '';
-                
-                if (diff > 0) {
-                    trendHtml = `<span class="neon-green w-20 text-right"><i class="fa-solid fa-caret-up mr-1"></i>+${formatPrice(diff)} kr.</span>`;
-                } else if (diff < 0) {
-                    trendHtml = `<span class="neon-red w-20 text-right"><i class="fa-solid fa-caret-down mr-1"></i>${formatPrice(diff)} kr.</span>`;
+
+                // Priority: 1) Client cache from previous poll tick
+                //           2) Backend previous_price from products.json
+                //           3) Current price (if first run and no history)
+                let prev;
+                if (previousPriceCache[uuid] !== undefined) {
+                    prev = previousPriceCache[uuid];
+                } else if (product.previous_price !== undefined) {
+                    prev = product.previous_price;
                 } else {
-                    trendHtml = `<span class="text-gray-500 w-20 text-right"><i class="fa-solid fa-minus mr-1"></i>0 kr.</span>`;
+                    prev = curr;
+                }
+
+                const diff = Math.round((curr - prev) * 100) / 100;
+                
+                let changeHtml = '';
+                if (diff > 0) {
+                    changeHtml = `<span class="neon-green font-bold text-lg inline-flex items-center ml-3"><i class="fa-solid fa-caret-up mr-0.5 text-sm"></i>+${formatPrice(diff)} kr.</span>`;
+                } else if (diff < 0) {
+                    changeHtml = `<span class="neon-red font-bold text-lg inline-flex items-center ml-3"><i class="fa-solid fa-caret-down mr-0.5 text-sm"></i>${formatPrice(diff)} kr.</span>`;
+                } else {
+                    changeHtml = `<span class="text-gray-500 font-medium text-sm inline-flex items-center ml-3"><i class="fa-solid fa-minus mr-0.5 text-xs"></i>0 kr.</span>`;
                 }
 
                 html += `
                     <div class="flex justify-between items-center row-border pb-3 hover:bg-white/5 transition-colors duration-300 px-2 -mx-2 rounded">
-                        <span class="text-gray-100 flex items-center gap-3 truncate pr-4">
+                        <span class="text-gray-100 flex items-center gap-3 truncate pr-4 text-xl font-medium">
                             <i class="fa-solid fa-martini-glass text-gray-500 text-base"></i> 
                             ${product.product_name}
                         </span>
-                        <div class="flex gap-6 text-right shrink-0">
-                            <span class="text-gray-400 w-16">${formatPrice(orig)} kr.</span>
-                            ${trendHtml}
+                        <div class="flex items-baseline justify-end shrink-0">
+                            <span class="text-white font-bold text-2xl tracking-wide">${formatPrice(curr)} kr.</span>
+                            ${changeHtml}
                         </div>
                     </div>
                 `;
+
+                // Update the client cache for the next poll
+                previousPriceCache[uuid] = curr;
             });
             container.innerHTML = html;
         }

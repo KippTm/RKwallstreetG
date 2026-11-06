@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wall Street Bar - Sales Vector & Price Simulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; background-color: #0b1120; color: #e2e8f0; }
+        input[type=number]::-webkit-inner-spin-button, 
+        input[type=number]::-webkit-outer-spin-button { 
+            -webkit-appearance: none; 
+            margin: 0; 
+        }
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-6 min-h-screen flex flex-col">
+    <div class="max-w-7xl mx-auto w-full space-y-5 flex-1 flex flex-col">
+
+        <!-- Header -->
+        <header class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-4 gap-4">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xl border border-indigo-500/30">
+                    <i class="fa-solid fa-flask-vial"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl md:text-2xl font-bold text-white flex items-center gap-2">
+                        Sales Vector & Pricing Simulator
+                        <span class="text-[11px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-mono font-normal">
+                            <i class="fa-solid fa-shield-halved mr-1"></i>Offline (No Zettle Push)
+                        </span>
+                    </h1>
+                    <p class="text-xs text-slate-400 mt-0.5">Stage a sales vector across menu items, push it to calculate the next price tick, and observe how parameters shape the market.</p>
+                </div>
+            </div>
+
+            <!-- Top Nav & Engine Badges -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+                <div class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                    <span class="text-slate-400">Tick:</span>
+                    <span id="badgeTick" class="font-bold text-emerald-400">#0</span>
+                </div>
+
+                <div class="bg-slate-900 border border-slate-800 px-3 py-1.5 rounded-lg flex items-center gap-2">
+                    <span class="text-slate-400">House Bank:</span>
+                    <span id="badgeBank" class="font-bold text-slate-200">0.00 kr</span>
+                    <span id="badgeBankTag" class="text-[10px] px-1.5 py-0.2 rounded bg-slate-800 text-slate-400">Neutral</span>
+                </div>
+
+                <a href="/admin" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-server text-slate-400"></i> Admin
+                </a>
+                <a href="/" target="_blank" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition inline-flex items-center gap-1.5">
+                    <i class="fa-solid fa-tv text-emerald-400"></i> Live Board
+                </a>
+            </div>
+        </header>
+
+        <!-- Notification Banner -->
+        <div id="toastBanner" class="hidden px-4 py-3 rounded-lg border text-xs flex justify-between items-center transition-all">
+            <span id="toastMessage"></span>
+            <button onclick="dismissToast()" class="text-slate-400 hover:text-white ml-4"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Sales Vector Staging Toolbar -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+            
+            <!-- Left: Helper actions to populate the vector -->
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+                <span class="text-slate-400 font-semibold mr-1">Vector Helpers:</span>
+                <button onclick="setVectorAll(0)" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg transition flex items-center gap-1.5" title="Set all quantities in the vector to 0">
+                    <i class="fa-solid fa-rotate-left text-slate-400"></i> Reset to 0s
+                </button>
+                <button onclick="quickPushIdleTick()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-900/60 rounded-lg transition flex items-center gap-1.5" title="Immediately pushes a 0-sales vector to test pure Dutch decay">
+                    <i class="fa-solid fa-arrow-down-long text-amber-400"></i> Push Idle Tick (Q=0)
+                </button>
+                <button onclick="randomRushVector()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-900/60 rounded-lg transition flex items-center gap-1.5" title="Populate random sales counts into the vector">
+                    <i class="fa-solid fa-dice text-indigo-400"></i> Random Rush Vector
+                </button>
+                <button onclick="resetMarket()" class="px-3 py-2 bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/60 rounded-lg transition flex items-center gap-1.5" title="Reset all current prices back to original prices and bank to 0">
+                    <i class="fa-solid fa-arrow-rotate-left text-rose-400"></i> Reset Market to Base
+                </button>
+
+                <label class="flex items-center gap-2 text-xs text-slate-300 bg-slate-950 px-3 py-2 rounded-lg border border-slate-800 cursor-pointer select-none ml-1">
+                    <input type="checkbox" id="chkNoise" checked class="rounded border-slate-700 bg-slate-900 text-emerald-500 focus:ring-0">
+                    <span>Brownian Noise (&sigma;Z)</span>
+                </label>
+            </div>
+
+            <!-- Right: The "Push Sales Vector" Action Button -->
+            <div class="flex items-center gap-3 w-full lg:w-auto justify-end">
+                <div class="text-right text-xs">
+                    <div class="text-slate-400">Staged Vector: <span id="summaryTotalQty" class="font-bold text-white text-sm">0</span> units</div>
+                    <div class="text-[11px] text-slate-500">Click to calculate & apply next tick</div>
+                </div>
+
+                <button onclick="pushSalesVector()" id="btnPush" class="px-6 py-3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold tracking-wider transition flex items-center gap-2 shadow-lg shadow-emerald-950 border border-emerald-400">
+                    <i class="fa-solid fa-play"></i>
+                    <span>PUSH VECTOR & PREDICT TICK</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Product Table: Sales Vector Input & Current/Last Prices -->
+        <div class="bg-slate-900/90 border border-slate-800 rounded-xl overflow-hidden shadow-xl flex-1 flex flex-col">
+            <div class="p-3 bg-slate-950 border-b border-slate-800 flex flex-wrap items-center justify-between text-xs text-slate-400 gap-2">
+                <span class="font-semibold text-slate-300 flex items-center gap-2">
+                    <i class="fa-solid fa-list-ol text-emerald-400"></i> Drink Catalog & Sales Vector (Q)
+                </span>
+                <span class="text-[11px] text-slate-400">
+                    Enter quantities for each item, then press <strong class="text-emerald-400">Push Vector & Predict Tick</strong>
+                </span>
+            </div>
+
+            <div class="overflow-x-auto flex-1">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead>
+                        <tr class="bg-slate-950/70 border-b border-slate-800 text-slate-400 uppercase tracking-wider font-semibold">
+                            <th class="py-3 px-4">Product Name</th>
+                            <th class="py-3 px-3 text-center">Normal Price</th>
+                            <th class="py-3 px-3 text-center">Floor / Max</th>
+                            <th class="py-3 px-4 text-center">Current Price</th>
+                            <th class="py-3 px-4 text-center bg-slate-950/90 border-x border-slate-800 text-emerald-400">
+                                Staged Sales Vector (Q<sub>i</sub>)
+                            </th>
+                            <th class="py-3 px-4 text-right">Last Price Change</th>
+                        </tr>
+                    </thead>
+                    <tbody id="emulateTableBody" class="divide-y divide-slate-800/80 text-slate-300">
+                        <tr>
+                            <td colspan="6" class="py-12 text-center text-slate-500">
+                                <i class="fa-solid fa-spinner fa-spin text-lg mr-2 text-emerald-500"></i> Loading catalog...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Hyperparameters Live Tuning & Push Activity Log -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            
+            <!-- Live Hyperparameters Tuning -->
+            <div class="lg:col-span-2 bg-slate-900/60 border border-slate-800 rounded-xl p-4 space-y-3">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <span class="text-xs font-semibold text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-indigo-400"></i> Model Hyperparameters (Live)
+                    </span>
+                    <button onclick="saveHyperparameters()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-medium transition">
+                        Update Params
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1">Dutch Decay (&delta;)</label>
+                        <input type="number" step="0.005" id="param_delta_rel" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
+                        <span class="text-[10px] text-slate-500">Floor decay rate</span>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1">Noise Volatility (&sigma;)</label>
+                        <input type="number" step="0.005" id="param_sigma" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
+                        <span class="text-[10px] text-slate-500">GBM noise coefficient</span>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1">Own-Spike (&lambda;)</label>
+                        <input type="number" step="0.01" id="param_lambda_rel" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
+                        <span class="text-[10px] text-slate-500">Price jump per unit</span>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1">Bank Gain (&gamma;)</label>
+                        <input type="number" step="0.00005" id="param_gamma_rel" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
+                        <span class="text-[10px] text-slate-500">Feedback recovery rate</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Log -->
+            <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                    <span class="text-xs font-semibold text-slate-200 flex items-center gap-2 mb-2 border-b border-slate-800 pb-2">
+                        <i class="fa-solid fa-clock-rotate-left text-emerald-400"></i> Pushed Ticks History
+                    </span>
+                    <div id="pushLog" class="text-[11px] font-mono space-y-1.5 max-h-28 overflow-y-auto text-slate-400">
+                        <div class="text-slate-600">// Build a sales vector above and click Push to see results</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Scripting for Sales Vector Staging and Push -->
+    <script>
+        let catalog = [];
+        let salesVector = {};        // { variant_uuid: quantity }
+        let lastAppliedChanges = {}; // { variant_uuid: { diff, pct_change, old_price, new_price } }
+
+        async function init() {
+            await fetchCatalog();
+            await fetchEngineState();
+            await fetchHyperparameters();
+        }
+
+        async function fetchCatalog() {
+            try {
+                const res = await fetch('/api/catalog/managed');
+                catalog = await res.json();
+                catalog.forEach(item => {
+                    if (salesVector[item.variant_uuid] === undefined) {
+                        salesVector[item.variant_uuid] = 0;
+                    }
+                });
+                renderTable();
+                updateSummary();
+            } catch (err) {
+                console.error("Failed to load catalog", err);
+                showToast("Failed to fetch product catalog", "error");
+            }
+        }
+
+        async function fetchEngineState() {
+            try {
+                const res = await fetch('/api/engine/state');
+                const state = await res.json();
+                renderState(state);
+            } catch (err) {
+                console.error("Failed to load state", err);
+            }
+        }
+
+        async function fetchHyperparameters() {
+            try {
+                const res = await fetch('/api/engine/hyperparameters');
+                const params = await res.json();
+                document.getElementById('param_delta_rel').value = params.delta_rel ?? '';
+                document.getElementById('param_sigma').value = params.sigma ?? '';
+                document.getElementById('param_lambda_rel').value = params.lambda_rel ?? '';
+                document.getElementById('param_gamma_rel').value = params.gamma_rel ?? '';
+            } catch (err) {
+                console.error("Failed to load hyperparameters", err);
+            }
+        }
+
+        async function saveHyperparameters() {
+            const body = {
+                delta_rel: parseFloat(document.getElementById('param_delta_rel').value),
+                sigma: parseFloat(document.getElementById('param_sigma').value),
+                lambda_rel: parseFloat(document.getElementById('param_lambda_rel').value),
+                gamma_rel: parseFloat(document.getElementById('param_gamma_rel').value),
+            };
+
+            try {
+                const res = await fetch('/api/engine/hyperparameters', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (res.ok) {
+                    showToast("Hyperparameters updated successfully!", "success");
+                } else {
+                    showToast("Failed to update hyperparameters", "error");
+                }
+            } catch (err) {
+                showToast("Network error updating hyperparameters", "error");
+            }
+        }
+
+        function renderState(state) {
+            document.getElementById('badgeTick').textContent = `#${state.tick}`;
+            const bal = state.bank_balance_dkk || 0.0;
+            const balEl = document.getElementById('badgeBank');
+            const tagEl = document.getElementById('badgeBankTag');
+
+            balEl.textContent = `${bal >= 0 ? '+' : ''}${bal.toFixed(2)} kr`;
+            if (bal > 1.0) {
+                balEl.className = 'font-bold text-emerald-400';
+                tagEl.textContent = 'Surplus (Discount Mode)';
+                tagEl.className = 'text-[10px] px-1.5 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800';
+            } else if (bal < -1.0) {
+                balEl.className = 'font-bold text-rose-400';
+                tagEl.textContent = 'Deficit (Recovery Mode)';
+                tagEl.className = 'text-[10px] px-1.5 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800';
+            } else {
+                balEl.className = 'font-bold text-slate-200';
+                tagEl.textContent = 'Balanced';
+                tagEl.className = 'text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400';
+            }
+        }
+
+        function updateQuantity(uuid, delta) {
+            const current = salesVector[uuid] || 0;
+            salesVector[uuid] = Math.max(0, current + delta);
+            const input = document.getElementById(`qty_${uuid}`);
+            if (input) input.value = salesVector[uuid];
+            updateSummary();
+        }
+
+        function setQuantity(uuid, val) {
+            const num = parseInt(val, 10);
+            salesVector[uuid] = isNaN(num) ? 0 : Math.max(0, num);
+            updateSummary();
+        }
+
+        function setVectorAll(val) {
+            catalog.forEach(item => {
+                salesVector[item.variant_uuid] = val;
+                const input = document.getElementById(`qty_${item.variant_uuid}`);
+                if (input) input.value = val;
+            });
+            updateSummary();
+        }
+
+        function randomRushVector() {
+            catalog.forEach(item => {
+                const val = Math.random() > 0.45 ? Math.floor(Math.random() * 6) + 1 : 0;
+                salesVector[item.variant_uuid] = val;
+                const input = document.getElementById(`qty_${item.variant_uuid}`);
+                if (input) input.value = val;
+            });
+            updateSummary();
+        }
+
+        function updateSummary() {
+            const totalQty = Object.values(salesVector).reduce((a, b) => a + b, 0);
+            document.getElementById('summaryTotalQty').textContent = totalQty;
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('emulateTableBody');
+            if (!catalog.length) {
+                tbody.innerHTML = `<tr><td colspan="6" class="py-8 text-center text-slate-500">No managed products found in products.json</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = catalog.map(item => {
+                const uuid = item.variant_uuid;
+                const qty = salesVector[uuid] || 0;
+                const last = lastAppliedChanges[uuid];
+
+                const normalPrice = (item.normal_price !== undefined ? item.normal_price : item.original_price).toFixed(2);
+                const currentPrice = item.current_price.toFixed(2);
+
+                let changeHtml = '<span class="text-slate-600 font-mono text-[11px]">—</span>';
+                if (last) {
+                    const diff = last.diff;
+                    const pct = last.pct_change;
+                    if (diff > 0) {
+                        changeHtml = `<span class="inline-flex items-center px-2 py-0.5 rounded border border-emerald-800/80 bg-emerald-950/60 font-mono text-[11px] font-semibold text-emerald-400">
+                            <i class="fa-solid fa-arrow-up mr-1 text-emerald-400"></i> +${diff.toFixed(2)} (+${pct.toFixed(1)}%)
+                        </span>`;
+                    } else if (diff < 0) {
+                        changeHtml = `<span class="inline-flex items-center px-2 py-0.5 rounded border border-rose-800/80 bg-rose-950/60 font-mono text-[11px] font-semibold text-rose-400">
+                            <i class="fa-solid fa-arrow-down mr-1 text-rose-400"></i> ${diff.toFixed(2)} (${pct.toFixed(1)}%)
+                        </span>`;
+                    } else {
+                        changeHtml = `<span class="inline-flex items-center px-2 py-0.5 rounded border border-slate-800 bg-slate-900 font-mono text-[11px] text-slate-400">
+                            <i class="fa-solid fa-minus mr-1"></i> 0.00 (0.0%)
+                        </span>`;
+                    }
+                }
+
+                return `
+                    <tr class="hover:bg-slate-800/40 transition">
+                        <!-- Product Name -->
+                        <td class="py-3 px-4">
+                            <div class="font-bold text-white text-sm">${escapeHtml(item.product_name)}</div>
+                            <div class="text-[10px] text-slate-500 font-mono select-all">${uuid.substring(0, 8)}...</div>
+                        </td>
+
+                        <!-- Normal Price -->
+                        <td class="py-3 px-3 text-center font-mono text-slate-400">
+                            ${normalPrice} kr
+                        </td>
+
+                        <!-- Bounds -->
+                        <td class="py-3 px-3 text-center font-mono text-xs text-slate-500">
+                            ${item.min_price} - ${item.max_price} kr
+                        </td>
+
+                        <!-- Current Price -->
+                        <td class="py-3 px-4 text-center font-mono text-base font-bold text-slate-100">
+                            ${currentPrice} kr
+                        </td>
+
+                        <!-- Sales Vector Stepper -->
+                        <td class="py-3 px-4 text-center bg-slate-950/40 border-x border-slate-800/60">
+                            <div class="inline-flex items-center gap-1 bg-slate-950 border border-slate-700/80 rounded-lg p-1">
+                                <button onclick="updateQuantity('${uuid}', -1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-900 hover:bg-slate-800 text-slate-300 transition">
+                                    <i class="fa-solid fa-minus text-xs"></i>
+                                </button>
+                                <input type="number" min="0" id="qty_${uuid}" value="${qty}" oninput="setQuantity('${uuid}', this.value)"
+                                       class="w-14 bg-transparent text-center font-mono text-sm font-bold text-emerald-400 focus:outline-none">
+                                <button onclick="updateQuantity('${uuid}', 1)" class="w-7 h-7 flex items-center justify-center rounded bg-slate-900 hover:bg-slate-800 text-emerald-400 transition">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                                <button onclick="updateQuantity('${uuid}', 5)" class="px-2 h-7 flex items-center justify-center rounded bg-indigo-950 hover:bg-indigo-900 text-indigo-300 text-[11px] font-mono transition" title="Add 5 units">
+                                    +5
+                                </button>
+                            </div>
+                        </td>
+
+                        <!-- Last Price Change -->
+                        <td class="py-3 px-4 text-right whitespace-nowrap">
+                            ${changeHtml}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        async function pushSalesVector() {
+            const btn = document.getElementById('btnPush');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> Predicting & Pushing...`;
+
+            try {
+                const includeNoise = document.getElementById('chkNoise').checked;
+                const res = await fetch('/api/engine/emulate/push', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        purchases: salesVector,
+                        include_noise: includeNoise
+                    })
+                });
+
+                if (!res.ok) throw new Error("Push request failed");
+                const data = await res.json();
+
+                // Save last applied changes for display
+                lastAppliedChanges = {};
+                (data.applied_changes || []).forEach(c => {
+                    lastAppliedChanges[c.variant_uuid] = c;
+                });
+
+                // Update catalog & engine state
+                catalog = data.catalog || catalog;
+                renderState(data.engine_state);
+
+                // Log the tick
+                logPushActivity(data);
+
+                // Reset sales vector inputs back to 0 for next tick
+                setVectorAll(0);
+
+                // Re-render table with updated prices and change badges
+                renderTable();
+
+                showToast(`Tick #${data.engine_state.tick} applied! Local prices updated (Zettle untouched).`, "success");
+            } catch (err) {
+                console.error("Failed to push sales vector", err);
+                showToast("Failed to push vector: " + err.message, "error");
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = `<i class="fa-solid fa-play"></i> PUSH VECTOR & PREDICT TICK`;
+            }
+        }
+
+        async function quickPushIdleTick() {
+            setVectorAll(0);
+            await pushSalesVector();
+        }
+
+        async function resetMarket() {
+            if (!confirm("Reset all drink prices back to their original baseline in products.json, and reset the House Bank to 0?")) {
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/engine/emulate/reset', { method: 'POST' });
+                if (!res.ok) throw new Error("Reset failed");
+                const data = await res.json();
+                catalog = data.catalog || catalog;
+                renderState(data.engine_state);
+                lastAppliedChanges = {};
+                setVectorAll(0);
+                renderTable();
+                showToast("Market and House Bank reset to original baselines!", "success");
+            } catch (err) {
+                showToast("Failed to reset market: " + err.message, "error");
+            }
+        }
+
+        function logPushActivity(data) {
+            const logEl = document.getElementById('pushLog');
+            const now = new Date().toLocaleTimeString();
+            const changes = data.applied_changes || [];
+            const summary = changes
+                .filter(c => c.diff !== 0)
+                .map(c => `${c.product_name}: ${c.old_price} &rarr; ${c.new_price} (${c.diff >= 0 ? '+' : ''}${c.diff})`)
+                .join(', ');
+
+            const entry = document.createElement('div');
+            entry.className = 'border-l-2 border-emerald-500 pl-2 py-0.5 text-slate-300';
+            entry.innerHTML = `<span class="text-slate-500">[${now}]</span> <strong>Tick #${data.engine_state.tick}</strong>: ${summary || 'Prices unchanged / steady'}`;
+            
+            if (logEl.children.length === 1 && logEl.children[0].textContent.includes('// Build a sales vector')) {
+                logEl.innerHTML = '';
+            }
+            logEl.prepend(entry);
+        }
+
+        function showToast(msg, type = "info") {
+            const banner = document.getElementById('toastBanner');
+            const msgEl = document.getElementById('toastMessage');
+            msgEl.textContent = msg;
+
+            if (type === "success") {
+                banner.className = 'px-4 py-3 rounded-lg border bg-emerald-950/80 border-emerald-700 text-emerald-200 text-xs flex justify-between items-center shadow-lg';
+            } else if (type === "error") {
+                banner.className = 'px-4 py-3 rounded-lg border bg-rose-950/80 border-rose-700 text-rose-200 text-xs flex justify-between items-center shadow-lg';
+            } else {
+                banner.className = 'px-4 py-3 rounded-lg border bg-slate-800 border-slate-700 text-slate-200 text-xs flex justify-between items-center shadow-lg';
+            }
+            banner.classList.remove('hidden');
+
+            setTimeout(() => {
+                banner.classList.add('hidden');
+            }, 6000);
+        }
+
+        function dismissToast() {
+            document.getElementById('toastBanner').classList.add('hidden');
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/[&<>"']/g, s => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[s]));
+        }
+
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

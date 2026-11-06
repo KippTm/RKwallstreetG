@@ -28,6 +28,10 @@ from .products import (
     get_token_info,
     clear_token_cache,
 )
+from .purchases import (
+    get_purchases,
+    extract_variant_sales,
+)
 
 __all__ = [
     "ZettleClient",
@@ -48,5 +52,7 @@ __all__ = [
     "reset_client",
     "get_token_info",
     "clear_token_cache",
+    "get_purchases",
+    "extract_variant_sales",
 ]
 
