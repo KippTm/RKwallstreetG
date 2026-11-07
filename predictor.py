@@ -35,6 +35,8 @@ class DynamicPricingPredictor:
         omega_rel: float = None,
         gamma_rel: float = 0.0001,
         max_price_multiplier: float = 3.0,
+        crash: bool = False,
+        crash_discount: float = 0.30,
     ):
         """
         Parameters
@@ -54,6 +56,11 @@ class DynamicPricingPredictor:
             fractional correction applied uniformly across all items.
         max_price_multiplier : float
             Ceiling = this multiplier × min_price (the floor price).
+        crash : bool
+            Market crash mode. When True, lowers returned prices by crash_discount (30%)
+            while maintaining the underlying proper un-crashed price.
+        crash_discount : float
+            Fractional price cut during a crash (defaults to 0.30, i.e. 30% discount).
         """
         self.delta_rel = float(delta_rel)
         self.sigma = float(sigma)
@@ -61,10 +68,13 @@ class DynamicPricingPredictor:
         self._omega_rel_init = omega_rel          # None → computed on first call
         self.gamma_rel = float(gamma_rel)
         self.max_price_multiplier = float(max_price_multiplier)
+        self.crash = bool(crash)
+        self.crash_discount = float(crash_discount)
 
         # PI bank state — persists across ticks
         self.bank_balance: float = 0.0
         self.tick_count: int = 0
+        self.proper_prices: Dict[Any, float] = {}
 
     # ------------------------------------------------------------------
     # Public API
@@ -110,13 +120,26 @@ class DynamicPricingPredictor:
         dict
             {uuid_or_index: new_price_rounded_to_2dp}
         """
-        P      = np.array(current_prices, dtype=np.float64)
+        keys = list(uuids) if uuids is not None else list(range(len(current_prices)))
+
+        # Determine base proper price for each item.
+        # If in a crash and we have tracked the uncrashed proper price, use that as base
+        # so the 30% reduction never compounds over ticks.
+        P_base = []
+        for idx, k in enumerate(keys):
+            p_val = float(current_prices[idx])
+            if k in self.proper_prices:
+                stored = self.proper_prices[k]
+                # If input appears to be the discounted crashed price, restore stored proper price
+                if abs(p_val - stored * (1.0 - self.crash_discount)) < 0.1 or (self.crash and p_val < stored * 0.85):
+                    p_val = stored
+            P_base.append(p_val)
+
+        P      = np.array(P_base,         dtype=np.float64)
         P_min  = np.array(min_prices,     dtype=np.float64)
         P_norm = np.array(normal_prices,  dtype=np.float64)
         Q      = np.array(quantities,     dtype=np.float64)
         N      = len(P)
-
-        keys = list(uuids) if uuids is not None else list(range(N))
 
         # Resolve omega: default to zero-sum (λ / (N-1))
         omega_rel = (
@@ -168,11 +191,24 @@ class DynamicPricingPredictor:
         # ── 4. Project onto feasible bounds [P_min, P_max] ─────────────
         P_new = np.clip(P_raw, P_min, P_max)
 
+        proper_dict = {k: round(float(v), 2) for k, v in zip(keys, P_new)}
         if commit:
+            self.proper_prices.update(proper_dict)
             self.bank_balance = effective_bank
             self.tick_count += 1
 
-        return {k: round(float(v), 2) for k, v in zip(keys, P_new)}
+        if self.crash:
+            crashed_dict = {
+                k: round(float(v * (1.0 - self.crash_discount)), 2)
+                for k, v in zip(keys, P_new)
+            }
+            return crashed_dict
+
+        return proper_dict
+
+    def get_proper_prices(self) -> Dict[Any, float]:
+        """Return the dictionary of underlying proper (uncrashed) prices."""
+        return dict(self.proper_prices)
 
     def simulate_step(
         self,
@@ -236,6 +272,8 @@ class DynamicPricingPredictor:
             "omega_rel": self._omega_rel_init,
             "gamma_rel": self.gamma_rel,
             "max_price_multiplier": self.max_price_multiplier,
+            "crash": self.crash,
+            "crash_discount": self.crash_discount,
         }
 
     def update_hyperparameters(
@@ -246,6 +284,8 @@ class DynamicPricingPredictor:
         omega_rel: Union[float, None, object] = _UNSET,
         gamma_rel: Union[float, object] = _UNSET,
         max_price_multiplier: Union[float, object] = _UNSET,
+        crash: Union[bool, object] = _UNSET,
+        crash_discount: Union[float, object] = _UNSET,
         **kwargs,
     ) -> dict:
         """
@@ -265,6 +305,10 @@ class DynamicPricingPredictor:
             House Bank PI feedback gain.
         max_price_multiplier : float | None
             Hard ceiling multiplier relative to min_price.
+        crash : bool | None
+            Market crash mode (-30% price reduction while maintaining proper price).
+        crash_discount : float | None
+            Fractional discount applied during crash (default 0.30).
         **kwargs : dict
             Accepts any of the hyperparameter names as keyword arguments.
 
@@ -285,6 +329,10 @@ class DynamicPricingPredictor:
             self.gamma_rel = float(gamma_rel)
         if max_price_multiplier is not _UNSET:
             self.max_price_multiplier = float(max_price_multiplier)
+        if crash is not _UNSET:
+            self.crash = bool(crash)
+        if crash_discount is not _UNSET:
+            self.crash_discount = float(crash_discount)
 
         for key, val in kwargs.items():
             if key == "delta_rel":
@@ -299,6 +347,10 @@ class DynamicPricingPredictor:
                 self.gamma_rel = float(val)
             elif key == "max_price_multiplier":
                 self.max_price_multiplier = float(val)
+            elif key == "crash":
+                self.crash = bool(val)
+            elif key == "crash_discount":
+                self.crash_discount = float(val)
             else:
                 raise ValueError(f"Unknown hyperparameter: '{key}'")
 

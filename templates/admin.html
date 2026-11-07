@@ -57,7 +57,24 @@
                     <button onclick="triggerImmediateTick()" class="px-3 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600 rounded text-xs transition flex items-center gap-1.5">
                         <i class="fa-solid fa-bolt text-amber-400"></i> Run Tick Now
                     </button>
+                    <button id="btnCrashToggle" onclick="toggleCrash()" class="px-3 py-2 bg-rose-950/70 hover:bg-rose-900 text-rose-200 border border-rose-700 rounded text-xs transition flex items-center gap-1.5 shadow font-semibold">
+                        <i class="fa-solid fa-burst text-rose-400"></i> <span id="crashBtnText">Trigger Crash (-30%)</span>
+                    </button>
                 </div>
+            </div>
+
+            <!-- Market Crash Alert Banner (visible when crash is active) -->
+            <div id="crashAlertBanner" class="hidden bg-rose-950/80 border border-rose-600/70 text-rose-200 px-4 py-2.5 rounded text-xs flex flex-wrap items-center justify-between gap-2 shadow-lg">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-400 text-base animate-pulse"></i>
+                    <div>
+                        <span class="font-bold text-rose-100">MARKET CRASH ACTIVE (-30%):</span>
+                        <span class="text-rose-300 ml-1">Prices are currently reduced by 30%. Underlying proper market prices are preserved and ticking in the background.</span>
+                    </div>
+                </div>
+                <button onclick="toggleCrash()" class="px-3 py-1 bg-rose-800 hover:bg-rose-700 text-white rounded text-[11px] font-bold border border-rose-500 shadow transition">
+                    Revert Crash Back to Normal
+                </button>
             </div>
 
             <!-- Ticker Stats & Interval Configuration -->
@@ -100,7 +117,7 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-3 text-xs">
                     <div>
                         <label class="block text-slate-400 text-[11px] mb-1">Dutch Decay (&delta;)</label>
                         <input type="number" step="0.005" id="param_delta_rel" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
@@ -120,6 +137,14 @@
                         <label class="block text-slate-400 text-[11px] mb-1">Bank Gain (&gamma;)</label>
                         <input type="number" step="0.00005" id="param_gamma_rel" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
                         <span class="text-[10px] text-slate-500">Feedback recovery rate</span>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1">Market Crash</label>
+                        <div class="flex items-center gap-2 h-[34px] px-2 bg-slate-950 border border-slate-800 rounded">
+                            <input type="checkbox" id="param_crash" onchange="toggleCrashFromCheckbox(this.checked)" class="w-4 h-4 rounded bg-slate-900 border-slate-700 text-rose-600 focus:ring-rose-500 cursor-pointer">
+                            <span id="param_crash_label" class="text-[11px] font-mono text-slate-300">Off</span>
+                        </div>
+                        <span class="text-[10px] text-slate-500">-30% discount</span>
                     </div>
                 </div>
             </div>
@@ -167,6 +192,9 @@
             tbody.innerHTML = products.map(p => {
                 const isAltered = p.current_price !== p.original_price;
                 const statusColor = isAltered ? (p.current_price > p.original_price ? 'text-emerald-400' : 'text-rose-400') : 'text-slate-400';
+                const properInfo = (p.uncrashed_price && Math.abs(p.uncrashed_price - p.current_price) > 0.05)
+                    ? `<div class="text-[10px] text-amber-400 font-mono mt-0.5">Proper: ${p.uncrashed_price.toFixed(2)} kr (-30%)</div>`
+                    : '';
                 
                 return `
                     <tr class="hover:bg-slate-800/50 transition-colors">
@@ -175,7 +203,10 @@
                             <div class="text-[10px] text-slate-500 truncate w-32" title="${p.variant_uuid}">${p.variant_uuid}</div>
                         </td>
                         <td class="px-4 py-3">${p.original_price.toFixed(2)} kr</td>
-                        <td class="px-4 py-3 font-bold ${statusColor}">${p.current_price.toFixed(2)} kr</td>
+                        <td class="px-4 py-3">
+                            <span class="font-bold ${statusColor}">${p.current_price.toFixed(2)} kr</span>
+                            ${properInfo}
+                        </td>
                         <td class="px-4 py-3 text-slate-500">${p.min_price} - ${p.max_price}</td>
                         <td class="px-4 py-3">
                             <div class="flex items-center gap-2">
@@ -218,12 +249,81 @@
         }
 
         let tickerRunning = false;
+        let crashActive = false;
+
+        function updateCrashUI(isCrash) {
+            crashActive = !!isCrash;
+            const btn = document.getElementById('btnCrashToggle');
+            const btnText = document.getElementById('crashBtnText');
+            const banner = document.getElementById('crashAlertBanner');
+            const chk = document.getElementById('param_crash');
+            const lbl = document.getElementById('param_crash_label');
+
+            if (chk) chk.checked = crashActive;
+            if (lbl) {
+                lbl.textContent = crashActive ? "ACTIVE (-30%)" : "Off";
+                lbl.className = crashActive ? "text-[11px] font-mono text-rose-400 font-bold" : "text-[11px] font-mono text-slate-300";
+            }
+
+            if (btn && btnText) {
+                if (crashActive) {
+                    btn.className = "px-3 py-2 bg-rose-600 hover:bg-rose-500 text-white rounded text-xs transition flex items-center gap-1.5 shadow font-bold animate-pulse";
+                    btnText.textContent = "Revert Crash (Active -30%)";
+                } else {
+                    btn.className = "px-3 py-2 bg-rose-950/70 hover:bg-rose-900 text-rose-200 border border-rose-700 rounded text-xs transition flex items-center gap-1.5 shadow font-semibold";
+                    btnText.textContent = "Trigger Crash (-30%)";
+                }
+            }
+
+            if (banner) {
+                if (crashActive) {
+                    banner.classList.remove('hidden');
+                } else {
+                    banner.classList.add('hidden');
+                }
+            }
+        }
+
+        async function toggleCrash() {
+            try {
+                const targetState = !crashActive;
+                const btn = document.getElementById('btnCrashToggle');
+                const btnText = document.getElementById('crashBtnText');
+                if (btn) btn.disabled = true;
+                if (btnText) btnText.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-1"></i> ${targetState ? 'Crashing...' : 'Reverting...'}`;
+
+                const res = await fetch('/api/engine/crash', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ crash: targetState })
+                });
+                const data = await res.json();
+                if (btn) btn.disabled = false;
+                updateCrashUI(data.crash);
+                await fetchCatalog();
+                showToast(data.crash ? "Market Crash activated! Prices cut by 30%." : "Market Crash reverted! Normal prices restored.", "success");
+            } catch (err) {
+                alert("Failed to toggle crash: " + err.message);
+                const btn = document.getElementById('btnCrashToggle');
+                if (btn) btn.disabled = false;
+            }
+        }
+
+        async function toggleCrashFromCheckbox(checked) {
+            if (checked !== crashActive) {
+                await toggleCrash();
+            }
+        }
 
         async function fetchTickerStatus() {
             try {
                 const res = await fetch('/api/engine/ticker/status');
                 const data = await res.json();
                 tickerRunning = data.is_running;
+
+                if (data.crash !== undefined) {
+                    updateCrashUI(data.crash);
+                }
 
                 const badge = document.getElementById('tickerStatusBadge');
                 const btn = document.getElementById('btnToggleTicker');
@@ -318,6 +418,9 @@
                 document.getElementById('param_sigma').value = params.sigma ?? '';
                 document.getElementById('param_lambda_rel').value = params.lambda_rel ?? '';
                 document.getElementById('param_gamma_rel').value = params.gamma_rel ?? '';
+                if (params.crash !== undefined) {
+                    updateCrashUI(params.crash);
+                }
             } catch (err) {
                 console.error("Failed to load hyperparameters", err);
             }
@@ -329,6 +432,7 @@
                 sigma: parseFloat(document.getElementById('param_sigma').value),
                 lambda_rel: parseFloat(document.getElementById('param_lambda_rel').value),
                 gamma_rel: parseFloat(document.getElementById('param_gamma_rel').value),
+                crash: document.getElementById('param_crash').checked,
             };
 
             try {
@@ -338,6 +442,11 @@
                     body: JSON.stringify(body)
                 });
                 if (res.ok) {
+                    const data = await res.json();
+                    if (data.hyperparameters && data.hyperparameters.crash !== undefined) {
+                        updateCrashUI(data.hyperparameters.crash);
+                    }
+                    await fetchCatalog();
                     showToast("Hyperparameters updated successfully!", "success");
                 } else {
                     showToast("Failed to update hyperparameters", "error");

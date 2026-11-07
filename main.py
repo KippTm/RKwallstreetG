@@ -49,6 +49,8 @@ def load_products() -> List[Dict[str, Any]]:
             p["min_price"] = 0.0
         if "max_price" not in p:
             p["max_price"] = round(p.get("original_price", 20.0) * 2.0, 2)
+        if "uncrashed_price" not in p:
+            p["uncrashed_price"] = p["current_price"]
 
         # Standardize product_uuids and variant_uuids to lists
         if "product_uuids" not in p or not isinstance(p["product_uuids"], list):
@@ -73,6 +75,54 @@ def load_products() -> List[Dict[str, Any]]:
 def save_products(products: List[Dict[str, Any]]) -> None:
     with open(PRODUCTS_FILE, "w", encoding="utf-8") as f:
         json.dump(products, f, indent=2, ensure_ascii=False)
+
+def apply_crash_state(crash_active: bool) -> List[Dict[str, Any]]:
+    """
+    Applies or reverts a market crash:
+    - When crash_active is True: drops published prices by 30% (crash_discount)
+      while maintaining the underlying proper un-crashed price.
+    - When crash_active is False: reverts prices back to their proper un-crashed values.
+    Pushes updated prices to Zettle POS terminals and persists products.json.
+    """
+    predictor.crash = bool(crash_active)
+    products = load_products()
+    updates_made = False
+
+    for p in products:
+        if "uncrashed_price" not in p:
+            p["uncrashed_price"] = p["current_price"]
+
+        proper_price = p["uncrashed_price"]
+        old_price = p["current_price"]
+
+        if crash_active:
+            new_price = round(proper_price * (1.0 - predictor.crash_discount), 2)
+        else:
+            new_price = proper_price
+
+        if new_price != old_price:
+            p["previous_price"] = old_price
+            p["current_price"] = new_price
+            p["tick_diff"] = round(new_price - old_price, 2)
+            updates_made = True
+
+            try:
+                prod_uuids = p.get("product_uuids") or []
+                var_uuids = p.get("variant_uuids") or []
+                update_product_price(
+                    product_uuids=prod_uuids,
+                    price=new_price,
+                    matching=p.get("matching", "variant"),
+                    variant_uuids=var_uuids,
+                    is_cents=False,
+                )
+                print(f"[MarketCrash] {p['product_name']}: {old_price} -> {new_price} kr")
+            except Exception as ze:
+                print(f"[MarketCrash] Zettle push failed for {p['product_name']}: {ze}")
+
+    if updates_made:
+        save_products(products)
+    return products
 
 class TickerConfigRequest(BaseModel):
     interval_minutes: Optional[float] = None
@@ -128,6 +178,8 @@ class MarketTicker:
             "total_ticks": self.total_ticks,
             "bank_balance": float(round(predictor.bank_balance, 2)),
             "predictor_tick": predictor.tick_count,
+            "crash": predictor.crash,
+            "crash_discount": predictor.crash_discount,
         }
 
     async def _run_loop(self):
@@ -186,7 +238,7 @@ class MarketTicker:
         #      "variant"  → sum across all variant_uuids in sales_by_variant
         #      "product"  → sum across all product_uuids in sales_by_product
         uuids          = [p["variant_uuid"] for p in products]
-        current_prices = [p["current_price"] for p in products]
+        current_prices = [p.get("uncrashed_price", p["current_price"]) for p in products]
         min_prices     = [p["min_price"] for p in products]
         normal_prices  = [p["normal_price"] for p in products]
 
@@ -212,6 +264,8 @@ class MarketTicker:
             include_noise=True,
         )
 
+        proper_prices = predictor.get_proper_prices()
+
         # 5. Update prices in products.json and push to Zettle
         updates_made = False
         for p in products:
@@ -220,6 +274,10 @@ class MarketTicker:
 
             if uid not in predicted_prices:
                 continue
+
+            # Maintain underlying proper un-crashed price
+            if uid in proper_prices:
+                p["uncrashed_price"] = proper_prices[uid]
 
             new_price = min(predicted_prices[uid], p["max_price"])
             old_price = p["current_price"]
@@ -268,6 +326,28 @@ class HyperparameterUpdate(BaseModel):
     omega_rel: Optional[float] = None
     gamma_rel: Optional[float] = None
     max_price_multiplier: Optional[float] = None
+    crash: Optional[bool] = None
+    crash_discount: Optional[float] = None
+
+class CrashRequest(BaseModel):
+    crash: bool
+
+@app.get("/api/engine/crash")
+def get_crash_status():
+    return {
+        "crash": predictor.crash,
+        "crash_discount": predictor.crash_discount,
+    }
+
+@app.post("/api/engine/crash")
+def toggle_crash(req: CrashRequest):
+    prods = apply_crash_state(req.crash)
+    return {
+        "status": "success",
+        "crash": predictor.crash,
+        "crash_discount": predictor.crash_discount,
+        "products_count": len(prods),
+    }
 
 @app.get("/api/engine/hyperparameters")
 def get_engine_hyperparameters():
@@ -279,6 +359,8 @@ def update_engine_hyperparameters(params: HyperparameterUpdate):
         updated = predictor.update_hyperparameters(
             **{k: v for k, v in params.model_dump().items() if v is not None}
         )
+        if params.crash is not None:
+            apply_crash_state(params.crash)
         return {"status": "success", "hyperparameters": updated}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -349,6 +431,10 @@ def override_price(override: PriceOverride):
         )
         matched["previous_price"] = matched["current_price"]
         matched["current_price"] = override.new_price
+        if predictor.crash:
+            matched["uncrashed_price"] = round(override.new_price / (1.0 - predictor.crash_discount), 2)
+        else:
+            matched["uncrashed_price"] = override.new_price
         matched["tick_diff"] = round(matched["current_price"] - matched["previous_price"], 2)
         save_products(products)
         return {"status": "success", "new_price": override.new_price}

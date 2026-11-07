@@ -84,3 +84,92 @@ def test_manual_tick():
     assert res.status_code == 200
     ticker_data = res.json()["ticker"]
     assert ticker_data["total_ticks"] >= 1
+
+def test_crash_predictor_math():
+    from predictor import DynamicPricingPredictor
+    p = DynamicPricingPredictor(delta_rel=0.0, sigma=0.0, lambda_rel=0.0)
+
+    # Tick 1: Normal (proper price = 100)
+    prices_normal = p.predict_prices(
+        current_prices=[100.0],
+        min_prices=[10.0],
+        normal_prices=[100.0],
+        quantities=[0.0],
+        uuids=["item1"],
+        commit=True,
+    )
+    assert prices_normal["item1"] == 100.0
+    assert p.proper_prices["item1"] == 100.0
+
+    # Turn crash ON
+    p.crash = True
+
+    # Tick 2: Crash active -> returns 70% (70.0)
+    prices_crashed_1 = p.predict_prices(
+        current_prices=[100.0],
+        min_prices=[10.0],
+        normal_prices=[100.0],
+        quantities=[0.0],
+        uuids=["item1"],
+        commit=True,
+    )
+    assert prices_crashed_1["item1"] == 70.0
+    assert p.proper_prices["item1"] == 100.0
+
+    # Tick 3: Second tick while crashed. Even if 70.0 is passed in, it should NOT do 70 * 0.7 = 49!
+    prices_crashed_2 = p.predict_prices(
+        current_prices=[70.0],
+        min_prices=[10.0],
+        normal_prices=[100.0],
+        quantities=[0.0],
+        uuids=["item1"],
+        commit=True,
+    )
+    assert prices_crashed_2["item1"] == 70.0
+    assert p.proper_prices["item1"] == 100.0
+
+    # Turn crash OFF -> immediately reverts to 100.0
+    p.crash = False
+    prices_reverted = p.predict_prices(
+        current_prices=[70.0],
+        min_prices=[10.0],
+        normal_prices=[100.0],
+        quantities=[0.0],
+        uuids=["item1"],
+        commit=True,
+    )
+    assert prices_reverted["item1"] == 100.0
+    assert p.proper_prices["item1"] == 100.0
+
+def test_crash_api_endpoints():
+    # 1. Check crash status endpoint
+    res = client.get("/api/engine/crash")
+    assert res.status_code == 200
+    assert "crash" in res.json()
+
+    # 2. Get baseline catalog
+    cat_res = client.get("/api/catalog/managed")
+    base_prod = cat_res.json()[0]
+    uncrashed_val = base_prod.get("uncrashed_price", base_prod["current_price"])
+
+    # 3. Activate crash via POST /api/engine/crash
+    res = client.post("/api/engine/crash", json={"crash": True})
+    assert res.status_code == 200
+    assert res.json()["crash"] is True
+
+    # Verify catalog prices are discounted by 30%
+    cat_res_crashed = client.get("/api/catalog/managed")
+    crashed_prod = cat_res_crashed.json()[0]
+    expected_crashed = round(uncrashed_val * 0.7, 2)
+    assert abs(crashed_prod["current_price"] - expected_crashed) < 0.05
+    assert crashed_prod["uncrashed_price"] == uncrashed_val
+
+    # 4. Revert crash via POST /api/engine/crash
+    res = client.post("/api/engine/crash", json={"crash": False})
+    assert res.status_code == 200
+    assert res.json()["crash"] is False
+
+    # Verify catalog prices are restored
+    cat_res_reverted = client.get("/api/catalog/managed")
+    reverted_prod = cat_res_reverted.json()[0]
+    assert reverted_prod["current_price"] == uncrashed_val
