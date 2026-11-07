@@ -163,9 +163,9 @@ class MarketTicker:
 
         # 3. Create corresponding vectors from load_products
         #    For each product, pick the right sales dict based on the "matching" field:
-        #      "variant"  → look up by variant_uuid in sales_by_variant
+        #      "variant"  → look up by variant_uuids in sales_by_variant
         #      "product"  → sum across all product_uuids in sales_by_product
-        uuids          = [p["variant_uuid"] for p in products]
+        uuids          = [p["variant_uuidss"] for p in products]
         current_prices = [p["current_price"] for p in products]
         min_prices     = [p["min_price"] for p in products]
         normal_prices  = [p["normal_price"] for p in products]
@@ -180,7 +180,7 @@ class MarketTicker:
                 )
                 qty = sum(sales_by_product.get(uid, 0.0) for uid in prod_uuids)
             else:
-                qty = sales_by_variant.get(p["variant_uuid"], 0.0)
+                qty = sales_by_variant.get(p["variant_uuidss"], 0.0)
             quantities.append(qty)
 
         # 4. Call the new predictor function
@@ -196,13 +196,13 @@ class MarketTicker:
 
         # 5. Update prices in products.json and push to Zettle
         #
-        #   matching="variant" → one push: specific product_uuid + variant_uuid
-        #   matching="product" → one push per entry in product_uuids, no variant_uuid
+        #   matching="variant" → one push: specific product_uuid + variant_uuids
+        #   matching="product" → one push per entry in product_uuids, no variant_uuids
         #                        (each product UUID is a separate Zettle product whose
         #                        first/only variant receives the new price)
         updates_made = False
         for p in products:
-            var_uuid = p["variant_uuid"]
+            var_uuid = p["variant_uuids"]
             matching = p.get("matching", "variant")
 
             if var_uuid not in predicted_prices:
@@ -226,7 +226,7 @@ class MarketTicker:
                         update_product_price(
                             product_uuid=prod_uuid,
                             price=new_price,
-                            variant_uuid=None,   # target the first/only variant per product
+                            variant_uuids=None,   # target the first/only variant per product
                             is_cents=False,
                         )
                     print(
@@ -239,7 +239,7 @@ class MarketTicker:
                     update_product_price(
                         product_uuid=prod_uuid,
                         price=new_price,
-                        variant_uuid=var_uuid,
+                        variant_uuids=var_uuid,
                         is_cents=False,
                     )
                     print(f"[MarketTicker] Pushed price update: {p['product_name']} -> {new_price} kr")
@@ -256,7 +256,7 @@ class MarketTicker:
 ticker = MarketTicker(default_interval_minutes=2.0)
 
 class PriceOverride(BaseModel):
-    variant_uuid: str
+    variant_uuids: str
     new_price: float
 
 class EmulateRequest(BaseModel):
@@ -334,7 +334,7 @@ def override_price(override: PriceOverride):
     products = load_products()
     matched = None
     for p in products:
-        if p["variant_uuid"] == override.variant_uuid:
+        if p["variant_uuids"] == override.variant_uuid:
             matched = p
             break
     
@@ -346,7 +346,7 @@ def override_price(override: PriceOverride):
         update_product_price(
             product_uuid=prod_uuid,
             price=override.new_price,
-            variant_uuid=override.variant_uuid,
+            variant_uuids=override.variant_uuid,
             is_cents=False
         )
         matched["previous_price"] = matched["current_price"]
@@ -365,15 +365,15 @@ def run_pricing_cycle():
     try:
         sales_df = pd.read_csv(SALES_DATA_PATH)
     except FileNotFoundError:
-        sales_df = pd.DataFrame(columns=["variant_uuid", "quantity", "price", "timestamp"])
+        sales_df = pd.DataFrame(columns=["variant_uuids", "quantity", "price", "timestamp"])
 
     # Build quantity vector aligned to products (zero if no sales data)
     if not sales_df.empty and "quantity" in sales_df.columns:
-        volume = sales_df.groupby("variant_uuid")["quantity"].sum()
+        volume = sales_df.groupby("variant_uuids")["quantity"].sum()
     else:
         volume = pd.Series(dtype=float)
 
-    uuids          = [p["variant_uuid"] for p in products]
+    uuids          = [p["variant_uuids"] for p in products]
     current_prices = [p["current_price"] for p in products]
     min_prices     = [p["min_price"] for p in products]
     normal_prices  = [p["normal_price"] for p in products]
@@ -389,7 +389,7 @@ def run_pricing_cycle():
     updates_made = False
 
     for p in products:
-        var_uuid = p["variant_uuid"]
+        var_uuid = p["variant_uuids"]
         prod_uuid = p.get("product_uuid") or (p.get("product_uuids", [""])[0])
 
         if var_uuid in predicted_prices:
@@ -400,7 +400,7 @@ def run_pricing_cycle():
                     update_product_price(
                         product_uuid=prod_uuid,
                         price=new_price,
-                        variant_uuid=var_uuid,
+                        variant_uuids=var_uuid,
                         is_cents=False
                     )
                     p["previous_price"] = p["current_price"]
@@ -428,7 +428,7 @@ def run_reset_cycle():
                 update_product_price(
                     product_uuid=prod_uuid,
                     price=p["original_price"],
-                    variant_uuid=p["variant_uuid"],
+                    variant_uuids=p["variant_uuid"],
                     is_cents=False
                 )
                 p["previous_price"] = p["current_price"]
@@ -457,7 +457,7 @@ def emulate_simulate(req: EmulateRequest):
     products = load_products()
     if not products:
         raise HTTPException(status_code=404, detail="Products file not found or empty")
-    uuids = [p["variant_uuid"] for p in products]
+    uuids = [p["variant_uuids"] for p in products]
     current_prices = [p["current_price"] for p in products]
     min_prices = [p["min_price"] for p in products]
     normal_prices = [p["normal_price"] for p in products]
@@ -472,10 +472,10 @@ def emulate_simulate(req: EmulateRequest):
         include_noise=req.include_noise,
     )
 
-    name_map = {p["variant_uuid"]: p["product_name"] for p in products}
-    min_map = {p["variant_uuid"]: p["min_price"] for p in products}
-    max_map = {p["variant_uuid"]: p["max_price"] for p in products}
-    norm_map = {p["variant_uuid"]: p["normal_price"] for p in products}
+    name_map = {p["variant_uuids"]: p["product_name"] for p in products}
+    min_map = {p["variant_uuids"]: p["min_price"] for p in products}
+    max_map = {p["variant_uuids"]: p["max_price"] for p in products}
+    norm_map = {p["variant_uuids"]: p["normal_price"] for p in products}
 
     for uid, info in sim_data["predictions"].items():
         info["product_name"] = name_map.get(uid, uid)
@@ -502,7 +502,7 @@ def emulate_push(req: EmulateRequest):
     products = load_products()
     if not products:
         raise HTTPException(status_code=404, detail="Products file not found or empty")
-    uuids = [p["variant_uuid"] for p in products]
+    uuids = [p["variant_uuids"] for p in products]
     current_prices = [p["current_price"] for p in products]
     min_prices = [p["min_price"] for p in products]
     normal_prices = [p["normal_price"] for p in products]
@@ -521,7 +521,7 @@ def emulate_push(req: EmulateRequest):
     applied_changes = []
 
     for p in products:
-        var_uuid = p["variant_uuid"]
+        var_uuid = p["variant_uuids"]
 
         if var_uuid in predicted_prices:
             new_price = min(predicted_prices[var_uuid], p["max_price"])
@@ -532,7 +532,7 @@ def emulate_push(req: EmulateRequest):
 
             applied_changes.append({
                 "product_name": p["product_name"],
-                "variant_uuid": var_uuid,
+                "variant_uuids": var_uuid,
                 "old_price": old_price,
                 "new_price": new_price,
                 "diff": round(new_price - old_price, 2),

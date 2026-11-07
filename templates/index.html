@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wall Street Bar</title>
+    <title>Wall Street Bar - Live Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -23,72 +23,94 @@
         
         .neon-green { 
             color: #22c55e; 
-            text-shadow: 0 0 10px rgba(34, 197, 94, 0.4); 
+            text-shadow: 0 0 1vh rgba(34, 197, 94, 0.5); 
         }
         
         .neon-red { 
             color: #ef4444; 
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.4); 
+            text-shadow: 0 0 1vh rgba(239, 68, 68, 0.5); 
         }
         
         .board-container {
-            border: 4px solid #b48600;
-            box-shadow: 0 0 30px rgba(180, 134, 0, 0.2), inset 0 0 20px rgba(180, 134, 0, 0.1);
+            border: 0.4vh solid #b48600;
+            box-shadow: 0 0 4vh rgba(180, 134, 0, 0.25), inset 0 0 3vh rgba(180, 134, 0, 0.15);
             background: linear-gradient(180deg, #0f172a 0%, #020617 100%);
         }
 
         .row-border { 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08); 
+            border-bottom: 0.15vh solid rgba(255, 255, 255, 0.05); 
+        }
+
+        .columns-balance {
+            column-fill: balance;
         }
     </style>
 </head>
-<body class="text-gray-200 min-h-screen p-4 md:p-8 flex flex-col items-center">
+<body class="text-gray-200 h-screen w-screen overflow-hidden p-[2vh] flex flex-col items-center relative">
+
+    <!-- Fullscreen Toggle Button -->
+    <button onclick="toggleFullScreen()" class="absolute top-[2vh] right-[2vw] z-50 p-[1vh] text-transparent hover:text-slate-500 transition" title="Toggle Fullscreen">
+        <i id="fsIcon" class="fa-solid fa-expand text-[2.5vh]"></i>
+    </button>
 
     <!-- Header Section -->
-    <header class="text-center mb-8 space-y-2 mt-4">
-        <p class="text-gray-400 tracking-[0.3em] text-sm uppercase">Blok 1 Eksamensfest</p>
-        <h1 class="text-6xl md:text-8xl font-bold gold-text uppercase tracking-wider filter drop-shadow-lg">
+    <header class="shrink-0 text-center mb-[2vh] space-y-[0.5vh]">
+        <p class="text-gray-400 tracking-[0.3em] text-[1.5vh] uppercase">Blok 1 Eksamensfest</p>
+        <h1 class="text-[6vh] font-bold gold-text uppercase tracking-wider filter drop-shadow-lg leading-none">
             Wall Street Bar
         </h1>
-        <div class="flex items-center justify-center gap-4 text-green-500 font-bold text-xl tracking-widest mt-2">
-            <span>DRINKS</span> <span><i class="fa-solid fa-xmark text-gray-500 text-sm"></i></span> 
-            <span>STOCKS</span> <span><i class="fa-solid fa-xmark text-gray-500 text-sm"></i></span> 
+        <div class="flex items-center justify-center gap-[2vw] text-green-500 font-bold text-[1.8vh] tracking-widest pt-[0.5vh]">
+            <span>DRINKS</span> <span><i class="fa-solid fa-xmark text-gray-500 text-[1vh]"></i></span> 
+            <span>STOCKS</span> <span><i class="fa-solid fa-xmark text-gray-500 text-[1vh]"></i></span> 
             <span>PARTY</span>
         </div>
     </header>
 
     <!-- Main Stock Exchange Board -->
-    <main class="board-container rounded-lg w-full max-w-5xl p-6 md:p-10 relative z-10 flex flex-col">
+    <main class="board-container rounded-[1vh] w-full max-w-[96vw] p-[3vh] relative z-10 flex-1 flex flex-col min-h-0">
         
-        <!-- Live Managed Products Section -->
-        <div class="w-full space-y-6">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-end border-b-2 border-green-500/50 pb-3 mb-6">
-                <h2 class="text-4xl font-bold neon-green flex items-center gap-4">
-                    <i class="fa-solid fa-arrow-trend-up text-3xl"></i> LIVE TRADING
+        <div class="w-full flex-1 flex flex-col min-h-0">
+            <!-- Board Title Row -->
+            <div class="shrink-0 flex items-end border-b-[0.3vh] border-green-500/50 pb-[1vh] mb-[1.5vh]">
+                <h2 class="text-[3.5vh] font-bold neon-green flex items-center gap-[1vw]">
+                    <i class="fa-solid fa-arrow-trend-up text-[3vh]"></i> LIVE TRADING
                 </h2>
-                <div class="text-xs text-gray-400 uppercase tracking-widest font-bold mt-4 sm:mt-0 px-2 flex gap-8">
-                    <span>Kurs</span>
-                    <span>&AElig;ndring (Tick)</span>
-                </div>
             </div>
             
-            <!-- JavaScript will populate this container -->
-            <div id="price-board" class="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-4 font-medium text-xl">
-                <div class="text-center text-gray-500 py-12 lg:col-span-2">
-                    <i class="fa-solid fa-spinner fa-spin mr-2"></i> Forbinder til markedet...
+            <!-- Dynamic Data Container: Flows cleanly across columns without rigid category wrappers -->
+            <div id="price-board" class="flex-1 w-full columns-1 lg:columns-2 xl:columns-3 columns-balance gap-x-[4vw] font-medium overflow-hidden">
+                <div class="text-center text-gray-500 py-[10vh] text-[2.5vh] col-span-full">
+                    <i class="fa-solid fa-spinner fa-spin mr-[1vw]"></i> Forbinder til markedet...
                 </div>
             </div>
         </div>
         
     </main>
 
-    <!-- Fetch Logic -->
-    <script>
+    <!-- Logic -->
+<script>
         const API_URL = 'http://127.0.0.1:8000/api/catalog/managed';
-        let previousPriceCache = {}; // Cache of variant_uuid -> price from the last tick
+        let priceStateCache = {}; 
         
         function formatPrice(price) {
             return price % 1 === 0 ? price : price.toFixed(2);
+        }
+
+        function toggleFullScreen() {
+            const icon = document.getElementById('fsIcon');
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().then(() => {
+                    icon.className = 'fa-solid fa-compress text-[2.5vh]';
+                }).catch(err => {
+                    console.log(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen().then(() => {
+                        icon.className = 'fa-solid fa-expand text-[2.5vh]';
+                    });
+                }
+            }
         }
 
         async function fetchPrices() {
@@ -100,8 +122,8 @@
             } catch (error) {
                 console.error('Error fetching market data:', error);
                 document.getElementById('price-board').innerHTML = `
-                    <div class="text-center text-red-500 py-12 lg:col-span-2">
-                        <i class="fa-solid fa-triangle-exclamation mr-2"></i> Markedsforbindelse tabt
+                    <div class="text-center text-red-500 py-[10vh] text-[2.5vh] col-span-full">
+                        <i class="fa-solid fa-triangle-exclamation mr-[1vw]"></i> Markedsforbindelse tabt
                     </div>`;
             }
         }
@@ -109,58 +131,84 @@
         function renderBoard(products) {
             const container = document.getElementById('price-board');
             if (products.length === 0) {
-                container.innerHTML = `<div class="text-center text-gray-500 py-12 lg:col-span-2">Ingen produkter på markedet lige nu.</div>`;
+                container.innerHTML = `<div class="text-center text-gray-500 py-[10vh] text-[2.5vh] col-span-full">Ingen produkter på markedet lige nu.</div>`;
                 return;
             }
 
+            const groupedProducts = {};
+            products.forEach(p => {
+                const type = p.type || 'Diverse';
+                if (!groupedProducts[type]) groupedProducts[type] = [];
+                groupedProducts[type].push(p);
+            });
+
+            const sortedTypes = Object.keys(groupedProducts).sort();
             let html = '';
-            products.forEach(product => {
-                const uuid = product.variant_uuid;
-                const curr = product.current_price;
-
-                // Priority: 1) Client cache from previous poll tick
-                //           2) Backend previous_price from products.json
-                //           3) Current price (if first run and no history)
-                let prev;
-                if (previousPriceCache[uuid] !== undefined) {
-                    prev = previousPriceCache[uuid];
-                } else if (product.previous_price !== undefined) {
-                    prev = product.previous_price;
-                } else {
-                    prev = curr;
-                }
-
-                const diff = Math.round((curr - prev) * 100) / 100;
-                
-                let changeHtml = '';
-                if (diff > 0) {
-                    changeHtml = `<span class="neon-green font-bold text-lg inline-flex items-center ml-3"><i class="fa-solid fa-caret-up mr-0.5 text-sm"></i>+${formatPrice(diff)} kr.</span>`;
-                } else if (diff < 0) {
-                    changeHtml = `<span class="neon-red font-bold text-lg inline-flex items-center ml-3"><i class="fa-solid fa-caret-down mr-0.5 text-sm"></i>${formatPrice(diff)} kr.</span>`;
-                } else {
-                    changeHtml = `<span class="text-gray-500 font-medium text-sm inline-flex items-center ml-3"><i class="fa-solid fa-minus mr-0.5 text-xs"></i>0 kr.</span>`;
-                }
-
+            
+            sortedTypes.forEach(type => {
                 html += `
-                    <div class="flex justify-between items-center row-border pb-3 hover:bg-white/5 transition-colors duration-300 px-2 -mx-2 rounded">
-                        <span class="text-gray-100 flex items-center gap-3 truncate pr-4 text-xl font-medium">
-                            <i class="fa-solid fa-martini-glass text-gray-500 text-base"></i> 
-                            ${product.product_name}
-                        </span>
-                        <div class="flex items-baseline justify-end shrink-0">
-                            <span class="text-white font-bold text-2xl tracking-wide">${formatPrice(curr)} kr.</span>
-                            ${changeHtml}
-                        </div>
+                    <div class="border-b-[0.2vh] border-slate-700/60 pb-[0.3vh] mb-[0.5vh] mt-[1.5vh] first:mt-0 flex items-end break-inside-avoid break-after-avoid w-full">
+                        <h3 class="text-[1.8vh] font-bold text-yellow-600/90 uppercase tracking-widest pl-[0.5vh]">${type}</h3>
                     </div>
                 `;
 
-                // Update the client cache for the next poll
-                previousPriceCache[uuid] = curr;
+                groupedProducts[type].forEach(product => {
+                    const uuid = product.variant_uuid;
+                    const curr = product.current_price;
+
+                    // New Caching Logic
+                    if (!priceStateCache[uuid]) {
+                        priceStateCache[uuid] = {
+                            current: curr,
+                            previous: product.previous_price !== undefined ? product.previous_price : curr
+                        };
+                    } else if (priceStateCache[uuid].current !== curr) {
+                        priceStateCache[uuid].previous = priceStateCache[uuid].current;
+                        priceStateCache[uuid].current = curr;
+                    }
+                    const prev = priceStateCache[uuid].previous;
+
+                    const diff = Math.round((curr - prev) * 100) / 100;
+                    const pct = prev > 0 ? ((diff / prev) * 100).toFixed(1) : 0;
+                    
+                    let changeHtml = '';
+                    if (diff > 0) {
+                        changeHtml = `
+                            <div class="flex items-center justify-end w-[11vh] shrink-0 gap-[0.5vh]">
+                                <span class="neon-green font-bold text-[1.8vh] tracking-tight flex items-center shrink-0"><i class="fa-solid fa-caret-up mr-[0.4vh]"></i>+${formatPrice(diff)}</span>
+                                <span class="text-emerald-500/80 text-[1.2vh] font-mono font-bold tracking-tighter shrink-0">(+${pct}%)</span>
+                            </div>`;
+                    } else if (diff < 0) {
+                        changeHtml = `
+                            <div class="flex items-center justify-end w-[11vh] shrink-0 gap-[0.5vh]">
+                                <span class="neon-red font-bold text-[1.8vh] tracking-tight flex items-center shrink-0"><i class="fa-solid fa-caret-down mr-[0.4vh]"></i>${formatPrice(diff)}</span>
+                                <span class="text-rose-500/80 text-[1.2vh] font-mono font-bold tracking-tighter shrink-0">(${pct}%)</span>
+                            </div>`;
+                    } else {
+                        changeHtml = `
+                            <div class="flex items-center justify-end w-[11vh] shrink-0">
+                                <span class="text-gray-600 font-medium text-[1.6vh] flex items-center"><i class="fa-solid fa-minus mr-[0.4vh]"></i>0 kr.</span>
+                            </div>`;
+                    }
+
+                    html += `
+                        <div class="flex justify-between items-center row-border pb-[0.6vh] pt-[0.4vh] px-[1vh] -mx-[1vh] hover:bg-white/5 transition-colors duration-300 rounded w-full break-inside-avoid">
+                            <div class="text-gray-100 flex items-center gap-[0.8vw] truncate pr-[1vw] text-[1.8vh] font-medium flex-1 min-w-0">
+                                <i class="fa-solid fa-martini-glass text-gray-600 shrink-0 text-[1.4vh]"></i> 
+                                <span class="truncate">${product.product_name}</span>
+                            </div>
+                            <div class="flex items-center justify-end shrink-0 gap-[1.5vw]">
+                                <span class="text-white font-bold text-[2.2vh] tracking-wide shrink-0">${formatPrice(curr)} kr.</span>
+                                ${changeHtml}
+                            </div>
+                        </div>
+                    `;
+                });
             });
+            
             container.innerHTML = html;
         }
 
-        // Fetch immediately on load, then poll every 10 seconds
         fetchPrices();
         setInterval(fetchPrices, 10000);
     </script>

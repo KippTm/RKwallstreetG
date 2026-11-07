@@ -149,7 +149,6 @@ def find_product_by_name(
             return prod
     return None
 
-
 def update_product(
     product_uuid: str,
     product_data: Dict[str, Any],
@@ -159,28 +158,19 @@ def update_product(
     """
     Change/update an existing product using JSON merge patch.
     Only specified fields will be changed. Explicit None values remove fields.
-    
-    Args:
-        product_uuid: UUID of the product to update.
-        product_data: Dictionary containing fields to update (e.g. name, variants, description).
-        etag: Optional ETag for optimistic concurrency control (If-Match header).
-        client: Optional custom ZettleClient.
-        
-    Returns:
-        JSON-serializable updated product dictionary.
     """
     if not product_uuid:
         raise ValueError("product_uuid must be provided.")
     api = client or get_client()
 
-    # Ensure uuid is set in the payload if not present
     payload = dict(product_data)
     if "uuid" not in payload:
         payload["uuid"] = product_uuid
 
     headers = {}
     if etag:
-        headers["If-Match"] = etag
+        # HTTP specs require ETags to be wrapped in double quotes
+        headers["If-Match"] = f'"{etag}"' if not etag.startswith('"') else etag
 
     return api.request(
         "PUT",
@@ -191,65 +181,59 @@ def update_product(
 
 
 def update_product_price(
-    product_uuid: str,
+    product_uuids: Union[str, List[str]],
     price: Union[float, int],
+    matching: str = "variant",
     currency: Optional[str] = None,
-    variant_uuid: Optional[str] = None,
+    variant_uuids: Optional[Union[str, List[str]]] = None,
     is_cents: bool = False,
     client: Optional[ZettleClient] = None,
-) -> Dict[str, Any]:
+) -> List[Dict[str, Any]]:
     """
-    Convenience helper to change the price of a product or a specific variant.
-    
-    Args:
-        product_uuid: UUID of the product.
-        price: New price amount (e.g., 55.0 or 5500 if is_cents=True).
-        currency: ISO-4217 currency code (e.g. 'SEK', 'DKK', 'EUR'). Defaults to existing variant currency.
-        variant_uuid: UUID of the specific variant to update. If None, updates the first/default variant.
-        is_cents: Set to True if price is already in the smallest unit (minor unit/cents).
-                  If False, price is multiplied by 100 and rounded.
-        client: Optional custom ZettleClient.
-        
-    Returns:
-        JSON-serializable updated product dictionary.
+    Convenience helper to change the price of products based on the matching strategy.
+    If matching='product', updates ALL variants within the given product_uuids.
+    If matching='variant', updates ONLY variants that match the provided variant_uuids.
     """
     api = client or get_client()
-    current_prod = get_product(product_uuid, client=api)
+    
+    # Normalize inputs to lists for easier iteration
+    p_uuids = [product_uuids] if isinstance(product_uuids, str) else product_uuids
+    v_uuids = []
+    if variant_uuids:
+        v_uuids = [variant_uuids] if isinstance(variant_uuids, str) else variant_uuids
 
-    variants = current_prod.get("variants", [])
-    if not variants:
-        raise ZettleError(f"Product '{product_uuid}' has no variants to update price for.")
-
-    target_variant = None
-    if variant_uuid:
-        for v in variants:
-            if v.get("uuid") == variant_uuid:
-                target_variant = v
-                break
-        if not target_variant:
-            raise ZettleNotFoundError(f"Variant '{variant_uuid}' not found on product '{product_uuid}'.")
-    else:
-        # Default to first variant
-        target_variant = variants[0]
-
-    # Calculate amount in minor currency unit (e.g., cents)
     amount_int = int(round(price if is_cents else price * 100))
-    curr = currency or target_variant.get("price", {}).get("currencyId", "SEK")
+    results = []
 
-    # Update variant price
-    target_variant["price"] = {
-        "amount": amount_int,
-        "currencyId": curr.upper(),
-    }
+    for p_uuid in p_uuids:
+        current_prod = get_product(p_uuid, client=api)
+        variants = current_prod.get("variants", [])
+        
+        if not variants:
+            continue
 
-    # Prepare merge patch payload with variants
-    patch_payload = {
-        "uuid": product_uuid,
-        "variants": variants,
-    }
+        updated_variants = False
+        for v in variants:
+            # Apply matching strategy
+            if matching == "product" or (matching == "variant" and v.get("uuid") in v_uuids):
+                curr = currency or v.get("price", {}).get("currencyId", "SEK")
+                v["price"] = {
+                    "amount": amount_int,
+                    "currencyId": curr.upper(),
+                }
+                updated_variants = True
 
-    etag = current_prod.get("etag")
-    return update_product(product_uuid, patch_payload, etag=etag, client=api)
+        if updated_variants:
+            patch_payload = {
+                "uuid": p_uuid,
+                "variants": variants,
+            }
+            etag = current_prod.get("etag")
+            # Defer to update_product which now handles the ETag formatting safely
+            res = update_product(p_uuid, patch_payload, etag=etag, client=api)
+            results.append(res)
+
+    return results
 
 
 def create_product(

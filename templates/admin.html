@@ -82,7 +82,45 @@
 
                 <div class="bg-slate-950/60 p-3 rounded border border-slate-800">
                     <span class="text-slate-400 block text-[11px] mb-1">Total Ticks / Bank</span>
-                    <span id="statTotalTicks" class="font-mono text-white font-semibold">#0 (0.00 kr)</span>
+                    <span id="statTotalTicks" class="font-mono text-white font-semibold flex items-center gap-2">
+                        <span id="badgeTickCount">#0</span>
+                        <span id="badgeBank" class="text-slate-400 font-normal">(0.00 kr)</span>
+                    </span>
+                </div>
+            </div>
+            
+            <!-- Live Hyperparameters Tuning -->
+            <div class="border-t border-slate-800 pt-3 mt-2">
+                <div class="flex items-center justify-between pb-2">
+                    <span class="text-xs font-semibold text-slate-200 flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-indigo-400"></i> Model Hyperparameters
+                    </span>
+                    <button onclick="saveHyperparameters()" class="px-3 py-1 bg-indigo-600 hover:bg-indigo-500 text-white rounded text-xs font-medium transition">
+                        Update Params
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1">Dutch Decay (&delta;)</label>
+                        <input type="number" step="0.005" id="param_delta_rel" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
+                        <span class="text-[10px] text-slate-500">Floor decay rate</span>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1">Noise Volatility (&sigma;)</label>
+                        <input type="number" step="0.005" id="param_sigma" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
+                        <span class="text-[10px] text-slate-500">GBM noise coefficient</span>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1">Own-Spike (&lambda;)</label>
+                        <input type="number" step="0.01" id="param_lambda_rel" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
+                        <span class="text-[10px] text-slate-500">Price jump per unit</span>
+                    </div>
+                    <div>
+                        <label class="block text-slate-400 text-[11px] mb-1">Bank Gain (&gamma;)</label>
+                        <input type="number" step="0.00005" id="param_gamma_rel" class="w-full bg-slate-950 border border-slate-800 rounded px-2.5 py-1 text-white font-mono focus:border-indigo-500">
+                        <span class="text-[10px] text-slate-500">Feedback recovery rate</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -105,6 +143,12 @@
                 </table>
             </div>
         </div>
+    </div>
+
+    <!-- Notification Banner -->
+    <div id="toastBanner" class="fixed bottom-4 right-4 hidden px-4 py-3 rounded-lg border text-xs flex justify-between items-center transition-all z-50">
+        <span id="toastMessage"></span>
+        <button onclick="dismissToast()" class="text-slate-400 hover:text-white ml-4"><i class="fa-solid fa-xmark"></i></button>
     </div>
 
     <script>
@@ -199,7 +243,19 @@
                 document.getElementById('inputIntervalMinutes').value = data.interval_minutes;
                 document.getElementById('statLastRun').textContent = data.last_run ? data.last_run.split('T')[1] || data.last_run : 'Never';
                 document.getElementById('statLastPurchases').textContent = `${data.last_purchases_count} items`;
-                document.getElementById('statTotalTicks').textContent = `#${data.total_ticks} (${data.bank_balance >= 0 ? '+' : ''}${data.bank_balance} kr)`;
+                
+                const bal = data.bank_balance || 0.0;
+                document.getElementById('badgeTickCount').textContent = `#${data.total_ticks}`;
+                const bankEl = document.getElementById('badgeBank');
+                bankEl.textContent = `(${bal >= 0 ? '+' : ''}${bal.toFixed(2)} kr)`;
+                if (bal > 1.0) {
+                    bankEl.className = 'text-emerald-400 font-bold';
+                } else if (bal < -1.0) {
+                    bankEl.className = 'text-rose-400 font-bold';
+                } else {
+                    bankEl.className = 'text-slate-400 font-normal';
+                }
+
             } catch (err) {
                 console.error("Failed to load ticker status", err);
             }
@@ -254,8 +310,69 @@
             }
         }
 
+        async function fetchHyperparameters() {
+            try {
+                const res = await fetch('/api/engine/hyperparameters');
+                const params = await res.json();
+                document.getElementById('param_delta_rel').value = params.delta_rel ?? '';
+                document.getElementById('param_sigma').value = params.sigma ?? '';
+                document.getElementById('param_lambda_rel').value = params.lambda_rel ?? '';
+                document.getElementById('param_gamma_rel').value = params.gamma_rel ?? '';
+            } catch (err) {
+                console.error("Failed to load hyperparameters", err);
+            }
+        }
+
+        async function saveHyperparameters() {
+            const body = {
+                delta_rel: parseFloat(document.getElementById('param_delta_rel').value),
+                sigma: parseFloat(document.getElementById('param_sigma').value),
+                lambda_rel: parseFloat(document.getElementById('param_lambda_rel').value),
+                gamma_rel: parseFloat(document.getElementById('param_gamma_rel').value),
+            };
+
+            try {
+                const res = await fetch('/api/engine/hyperparameters', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (res.ok) {
+                    showToast("Hyperparameters updated successfully!", "success");
+                } else {
+                    showToast("Failed to update hyperparameters", "error");
+                }
+            } catch (err) {
+                showToast("Network error updating hyperparameters", "error");
+            }
+        }
+
+        function showToast(msg, type = "info") {
+            const banner = document.getElementById('toastBanner');
+            const msgEl = document.getElementById('toastMessage');
+            msgEl.textContent = msg;
+
+            if (type === "success") {
+                banner.className = 'fixed bottom-4 right-4 px-4 py-3 rounded-lg border bg-emerald-950/90 border-emerald-700 text-emerald-200 text-xs flex justify-between items-center shadow-lg z-50';
+            } else if (type === "error") {
+                banner.className = 'fixed bottom-4 right-4 px-4 py-3 rounded-lg border bg-rose-950/90 border-rose-700 text-rose-200 text-xs flex justify-between items-center shadow-lg z-50';
+            } else {
+                banner.className = 'fixed bottom-4 right-4 px-4 py-3 rounded-lg border bg-slate-800/90 border-slate-700 text-slate-200 text-xs flex justify-between items-center shadow-lg z-50';
+            }
+            banner.classList.remove('hidden');
+
+            setTimeout(() => {
+                banner.classList.add('hidden');
+            }, 6000);
+        }
+
+        function dismissToast() {
+            document.getElementById('toastBanner').classList.add('hidden');
+        }
+
         fetchCatalog();
         fetchTickerStatus();
+        fetchHyperparameters();
         setInterval(fetchCatalog, 10000);
         setInterval(fetchTickerStatus, 4000);
     </script>
