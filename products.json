@@ -11,12 +11,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 40.0,
-    "current_price": 68.87,
+    "current_price": 70.0,
     "normal_price": 70.0,
     "max_price": 140.0,
     "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
-    "previous_price": 70.0,
-    "tick_diff": -1.13,
+    "previous_price": 68.87,
+    "tick_diff": 1.13,
     "variant_uuid": "76e181b0-b17e-11ee-9ce7-1632a686ce89"
   },
   {
@@ -31,12 +31,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 18.0,
-    "current_price": 30.46,
+    "current_price": 30.0,
     "normal_price": 30.0,
     "max_price": 60.0,
     "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
-    "previous_price": 30.0,
-    "tick_diff": 0.46,
+    "previous_price": 30.46,
+    "tick_diff": -0.46,
     "variant_uuid": "04bfc130-b180-11ee-91a6-dd16006a37a3"
   },
   {
@@ -51,12 +51,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 18.0,
-    "current_price": 30.5,
+    "current_price": 30.0,
     "normal_price": 30.0,
     "max_price": 60.0,
     "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
-    "previous_price": 30.0,
-    "tick_diff": 0.5,
+    "previous_price": 30.5,
+    "tick_diff": -0.5,
     "variant_uuid": "04bfc130-b180-11ee-b9cd-3c18d4cc3b95"
   },
   {
@@ -71,12 +71,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 18.0,
-    "current_price": 29.22,
+    "current_price": 30.0,
     "normal_price": 30.0,
     "max_price": 60.0,
     "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
-    "previous_price": 30.0,
-    "tick_diff": -0.78,
+    "previous_price": 29.22,
+    "tick_diff": 0.78,
     "variant_uuid": "89a8d590-71b4-11ef-abb5-fba88d9d8235"
   },
   {
@@ -91,12 +91,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 15.0,
-    "current_price": 24.2,
+    "current_price": 25.0,
     "normal_price": 25.0,
     "max_price": 50.0,
     "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
-    "previous_price": 25.0,
-    "tick_diff": -0.8,
+    "previous_price": 24.2,
+    "tick_diff": 0.8,
     "variant_uuid": "0423d9b0-9b63-11ee-a715-37bef6b1d1d6"
   },
   {
@@ -111,12 +111,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 12.0,
-    "current_price": 20.12,
+    "current_price": 20.0,
     "normal_price": 20.0,
     "max_price": 40.0,
     "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
-    "previous_price": 20.0,
-    "tick_diff": 0.12,
+    "previous_price": 20.12,
+    "tick_diff": -0.12,
     "variant_uuid": "0b3b0930-9b63-11ee-a715-37bef6b1d1d6"
   },
   {
@@ -133,12 +133,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 12.0,
-    "current_price": 19.93,
+    "current_price": 20.0,
     "normal_price": 20.0,
     "max_price": 40.0,
     "product_uuid": "07148540-595d-11ee-9d67-83973f362f79",
-    "previous_price": 20.0,
-    "tick_diff": -0.07,
+    "previous_price": 19.93,
+    "tick_diff": 0.07,
     "variant_uuid": "0d86a6e0-9b63-11ee-a715-37bef6b1d1d6"
   },
   {
@@ -153,12 +153,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 12.0,
-    "current_price": 19.52,
+    "current_price": 20.0,
     "normal_price": 20.0,
     "max_price": 40.0,
     "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
-    "previous_price": 20.0,
-    "tick_diff": -0.48,
+    "previous_price": 19.52,
+    "tick_diff": 0.48,
     "variant_uuid": "11110620-9b63-11ee-a715-37bef6b1d1d6"
   },
   {
@@ -173,12 +173,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 12.0,
-    "current_price": 20.36,
+    "current_price": 20.0,
     "normal_price": 20.0,
     "max_price": 40.0,
     "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
-    "previous_price": 20.0,
-    "tick_diff": 0.36,
+    "previous_price": 20.36,
+    "tick_diff": -0.36,
     "variant_uuid": "136d6cb0-9b63-11ee-a715-37bef6b1d1d6"
   },
   {
@@ -193,12 +193,12 @@
       "e32a3b00-9b62-11ee-a715-37bef6b1d1d6"
     ],
     "min_price": 12.0,
-    "current_price": 19.75,
+    "current_price": 20.0,
     "normal_price": 20.0,
     "max_price": 40.0,
     "product_uuid": "e32a3b00-9b62-11ee-a715-37bef6b1d1d6",
-    "previous_price": 20.0,
-    "tick_diff": -0.25,
+    "previous_price": 19.75,
+    "tick_diff": 0.25,
     "variant_uuid": "89a8d590-71b4-11ef-83bf-3c08bc62f84c"
   },
   {
@@ -213,12 +213,12 @@
       "9238f730-d7ea-11ee-9974-20fd4078bb71"
     ],
     "min_price": 10.0,
-    "current_price": 19.39,
+    "current_price": 20.0,
     "normal_price": 20.0,
     "max_price": 40.0,
     "product_uuid": "9238f730-d7ea-11ee-9974-20fd4078bb71",
-    "previous_price": 20.0,
-    "tick_diff": -0.61,
+    "previous_price": 19.39,
+    "tick_diff": 0.61,
     "variant_uuid": "c2719090-615d-11ef-acc3-14049801124b"
   },
   {
@@ -233,13 +233,33 @@
       "9238f730-d7ea-11ee-9974-20fd4078bb71"
     ],
     "min_price": 10.0,
-    "current_price": 19.81,
+    "current_price": 20.0,
     "normal_price": 20.0,
     "max_price": 40.0,
     "product_uuid": "9238f730-d7ea-11ee-9974-20fd4078bb71",
-    "previous_price": 20.0,
-    "tick_diff": -0.19,
+    "previous_price": 19.81,
+    "tick_diff": 0.19,
     "variant_uuid": "c2719090-615d-11ef-af9f-b54d90da7bc3"
+  },
+  {
+    "product_name": "Tuborg Julebryg",
+    "matching": "variant",
+    "type": "Flaske Øl",
+    "variant_uuids": [
+      "1ee860f0-9b62-11ee-a715-37bef6b1d1d6"
+    ],
+    "original_price": 15.0,
+    "product_uuids": [
+      "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
+    ],
+    "min_price": 6.0,
+    "current_price": 15.0,
+    "normal_price": 12.0,
+    "max_price": 24.0,
+    "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
+    "previous_price": 12.0,
+    "tick_diff": 3.0,
+    "variant_uuid": "1ee860f0-9b62-11ee-a715-37bef6b1d1d6"
   },
   {
     "product_name": "Grøn Tuborg",
@@ -253,12 +273,12 @@
       "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
     ],
     "min_price": 8.0,
-    "current_price": 15.14,
+    "current_price": 15.0,
     "normal_price": 15.0,
     "max_price": 30.0,
     "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
-    "previous_price": 15.0,
-    "tick_diff": 0.14,
+    "previous_price": 15.14,
+    "tick_diff": -0.14,
     "variant_uuid": "a8878310-e653-11ec-999a-d5dbdabf168d"
   },
   {
@@ -273,12 +293,12 @@
       "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
     ],
     "min_price": 8.0,
-    "current_price": 15.09,
+    "current_price": 15.0,
     "normal_price": 15.0,
     "max_price": 30.0,
     "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
-    "previous_price": 15.0,
-    "tick_diff": 0.09,
+    "previous_price": 15.09,
+    "tick_diff": -0.09,
     "variant_uuid": "a9e872a0-e653-11ec-999a-d5dbdabf168d"
   },
   {
@@ -293,12 +313,12 @@
       "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
     ],
     "min_price": 10.0,
-    "current_price": 18.24,
+    "current_price": 18.0,
     "normal_price": 18.0,
     "max_price": 36.0,
     "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
-    "previous_price": 18.0,
-    "tick_diff": 0.24,
+    "previous_price": 18.24,
+    "tick_diff": -0.24,
     "variant_uuid": "ac4686e0-e653-11ec-999a-d5dbdabf168d"
   },
   {
@@ -313,12 +333,12 @@
       "9d8f96f0-e653-11ec-999a-d5dbdabf168d"
     ],
     "min_price": 8.0,
-    "current_price": 14.52,
+    "current_price": 15.0,
     "normal_price": 15.0,
     "max_price": 30.0,
     "product_uuid": "9d8f96f0-e653-11ec-999a-d5dbdabf168d",
-    "previous_price": 15.0,
-    "tick_diff": -0.48,
+    "previous_price": 14.52,
+    "tick_diff": 0.48,
     "variant_uuid": "52f21c40-9b7d-11ee-910e-7da21011e933"
   },
   {
@@ -331,12 +351,12 @@
       "150ca010-00cd-11f0-84f5-777a94851cda"
     ],
     "min_price": 12.0,
-    "current_price": 19.65,
+    "current_price": 20.0,
     "normal_price": 20.0,
     "max_price": 40.0,
     "product_uuid": "150ca010-00cd-11f0-84f5-777a94851cda",
-    "previous_price": 20.0,
-    "tick_diff": -0.35,
+    "previous_price": 19.65,
+    "tick_diff": 0.35,
     "variant_uuid": "150ca010-00cd-11f0-84f5-777a94851cda"
   },
   {
@@ -351,12 +371,12 @@
       "5c9af300-1a3a-11f1-9174-6188a42f082c"
     ],
     "min_price": 5.0,
-    "current_price": 9.93,
+    "current_price": 10.0,
     "normal_price": 10.0,
     "max_price": 20.0,
     "product_uuid": "83dcfaa0-2843-11ec-9d1e-f0c8fadad847",
-    "previous_price": 10.0,
-    "tick_diff": -0.07,
+    "previous_price": 9.93,
+    "tick_diff": 0.07,
     "variant_uuid": "83dcfaa0-2843-11ec-9d1e-f0c8fadad847"
   },
   {
@@ -369,12 +389,12 @@
       "9eab3f90-bf2d-11ed-b09a-2f5f760f691d"
     ],
     "min_price": 10.0,
-    "current_price": 14.9,
+    "current_price": 15.0,
     "normal_price": 15.0,
     "max_price": 30.0,
     "product_uuid": "9eab3f90-bf2d-11ed-b09a-2f5f760f691d",
-    "previous_price": 15.0,
-    "tick_diff": -0.1,
+    "previous_price": 14.9,
+    "tick_diff": 0.1,
     "variant_uuid": "9eab3f90-bf2d-11ed-b09a-2f5f760f691d"
   },
   {
@@ -387,12 +407,12 @@
       "d22b49e0-f10b-11ed-b1e7-5fbf9650979d"
     ],
     "min_price": 22.5,
-    "current_price": 44.43,
+    "current_price": 45.0,
     "normal_price": 45.0,
     "max_price": 90.0,
     "product_uuid": "d22b49e0-f10b-11ed-b1e7-5fbf9650979d",
-    "previous_price": 45.0,
-    "tick_diff": -0.57,
+    "previous_price": 44.43,
+    "tick_diff": 0.57,
     "variant_uuid": "d22b49e0-f10b-11ed-b1e7-5fbf9650979d"
   },
   {
@@ -406,12 +426,12 @@
       "91a3e540-2843-11ec-a0fe-abf2e575df3a"
     ],
     "min_price": 10.0,
-    "current_price": 14.93,
+    "current_price": 15.0,
     "normal_price": 15.0,
     "max_price": 30.0,
     "product_uuid": "d04449b0-00cc-11f0-a228-8e8644998500",
-    "previous_price": 15.0,
-    "tick_diff": -0.07,
+    "previous_price": 14.93,
+    "tick_diff": 0.07,
     "variant_uuid": "d04449b0-00cc-11f0-a228-8e8644998500"
   },
   {
@@ -424,12 +444,12 @@
       "fb1cbbf0-53e3-11ee-92f7-77503aa15be8"
     ],
     "min_price": 32.5,
-    "current_price": 64.67,
+    "current_price": 65.0,
     "normal_price": 65.0,
     "max_price": 130.0,
     "product_uuid": "fb1cbbf0-53e3-11ee-92f7-77503aa15be8",
-    "previous_price": 65.0,
-    "tick_diff": -0.33,
+    "previous_price": 64.67,
+    "tick_diff": 0.33,
     "variant_uuid": "fb1cbbf0-53e3-11ee-92f7-77503aa15be8"
   }
 ]
