@@ -169,8 +169,11 @@ def update_product(
 
     headers = {}
     if etag:
-        # HTTP specs require ETags to be wrapped in double quotes
-        headers["If-Match"] = f'"{etag}"' if not etag.startswith('"') else etag
+        # HTTP RFC 7232 requires ETags in If-Match to be quoted strings
+        clean_etag = str(etag).strip()
+        if not (clean_etag.startswith('"') and clean_etag.endswith('"')) and not clean_etag.startswith("W/"):
+            clean_etag = f'"{clean_etag}"'
+        headers["If-Match"] = clean_etag
 
     return api.request(
         "PUT",

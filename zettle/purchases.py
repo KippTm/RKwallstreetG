@@ -7,15 +7,20 @@ and integrate with the continuous pricing engine.
 """
 
 from typing import Any, Dict, List, Optional
+import datetime
 from .client import ZettleClient
 from .products import get_client
 
 PURCHASES_API_URL = "https://purchase.izettle.com/purchases/v2"
 
+# Saturday 7 November 2026, 13:00:00 CET (UTC+1) = 12:00:00 UTC
+DEFAULT_START_TIME_UTC = "2026-11-07T12:00:00.000Z"
+DEFAULT_START_DATETIME = datetime.datetime(2026, 11, 7, 12, 0, 0, tzinfo=datetime.timezone.utc)
+
 
 def get_purchases(
     last_purchase_hash: Optional[str] = None,
-    start_date: Optional[str] = None,
+    start_date: Optional[str] = DEFAULT_START_TIME_UTC,
     end_date: Optional[str] = None,
     limit: int = 100,
     descending: bool = False,
@@ -29,7 +34,7 @@ def get_purchases(
     last_purchase_hash : str | None
         Cursor from the previous API call. Only returns purchases after this hash.
     start_date : str | None
-        ISO-8601 formatted UTC timestamp (e.g., '2026-11-06T15:00:00.000Z').
+        ISO-8601 formatted UTC timestamp (defaults to 2026-11-07T12:00:00.000Z, i.e. 13:00 CET).
     end_date : str | None
         ISO-8601 formatted UTC timestamp.
     limit : int, default 100
@@ -78,10 +83,13 @@ def get_purchases(
 
 def extract_variant_sales(
     purchases: List[Dict[str, Any]],
+    cutoff_time: Optional[datetime.datetime] = DEFAULT_START_DATETIME,
 ) -> tuple[Dict[str, float], Dict[str, float]]:
     """
     Aggregate units sold per variant UUID and per product UUID from a list of
     Zettle purchases.
+
+    Filters out purchases occurring before cutoff_time (defaults to Saturday 7 Nov 13:00 CET).
 
     Some products.json entries use ``"matching": "variant"`` and should be
     looked up by their ``variantUuid``; others use ``"matching": "product"``
@@ -94,6 +102,8 @@ def extract_variant_sales(
     ----------
     purchases : list of dict
         Raw purchase objects from Zettle Purchases API.
+    cutoff_time : datetime.datetime | None
+        Earliest purchase time to process. Earlier purchases are ignored.
 
     Returns
     -------
@@ -106,6 +116,19 @@ def extract_variant_sales(
     by_product: Dict[str, float] = {}
 
     for purchase in purchases:
+        # Client-side timestamp check against cutoff time
+        if cutoff_time is not None:
+            ts_str = purchase.get("timestamp") or purchase.get("created") or purchase.get("purchaseDate")
+            if ts_str:
+                try:
+                    dt = datetime.datetime.fromisoformat(str(ts_str).replace("Z", "+00:00"))
+                    if dt.tzinfo is None:
+                        dt = dt.replace(tzinfo=datetime.timezone.utc)
+                    if dt < cutoff_time:
+                        continue
+                except Exception:
+                    pass
+
         lines = (
             purchase.get("products")
             or purchase.get("items")

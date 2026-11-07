@@ -31,6 +31,26 @@ def test_extract_variant_sales():
     assert by_product["prod-1"] == 5.0
     assert by_product["prod-2"] == 1.0
 
+def test_extract_variant_sales_date_filter():
+    # Purchases before and after Saturday Nov 7 13:00 CET (12:00 UTC)
+    purchases = [
+        {
+            "purchaseUUID": "old-1",
+            "timestamp": "2026-11-07T11:59:59Z", # Before 13:00 CET
+            "products": [{"variantUuid": "var-old", "productUuid": "prod-old", "quantity": 10}],
+        },
+        {
+            "purchaseUUID": "valid-1",
+            "timestamp": "2026-11-07T13:00:01+01:00", # After 13:00 CET
+            "products": [{"variantUuid": "var-new", "productUuid": "prod-new", "quantity": 4}],
+        },
+    ]
+    by_variant, by_product = extract_variant_sales(purchases)
+    assert "var-old" not in by_variant
+    assert "prod-old" not in by_product
+    assert by_variant.get("var-new") == 4.0
+    assert by_product.get("prod-new") == 4.0
+
 def test_ticker_status_and_controls():
     # Check status endpoint
     res = client.get("/api/engine/ticker/status")
