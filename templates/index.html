@@ -30,6 +30,15 @@
             color: #ef4444; 
             text-shadow: 0 0 1vh rgba(239, 68, 68, 0.5); 
         }
+
+        @keyframes crash-alert-pulse {
+            0%, 100% { box-shadow: 0 0 1vh rgba(239, 68, 68, 0.45); }
+            50% { box-shadow: 0 0 3vh rgba(248, 113, 113, 0.95); }
+        }
+
+        .crash-alert {
+            animation: crash-alert-pulse 1s ease-in-out infinite;
+        }
         
         .board-container {
             border: 0.4vh solid #b48600;
@@ -47,6 +56,15 @@
     </style>
 </head>
 <body class="text-gray-200 h-screen w-screen overflow-hidden p-[2vh] flex flex-col items-center relative">
+
+    <!-- Active Crash Alert -->
+    <div id="crash-alert" class="hidden shrink-0 w-full max-w-[96vw] mb-[1.5vh] rounded-[1vh] border-[0.4vh] border-red-300 bg-red-700 px-[2vw] py-[1.2vh] text-center text-white crash-alert" role="alert" aria-live="assertive">
+        <span class="flex items-center justify-center gap-[1vw] text-[3vh] font-bold uppercase tracking-[0.15em]">
+            <i class="fa-solid fa-clock fa-spin"></i>
+            <span>MARKET CRASH ACTIVE</span>
+            <i class="fa-solid fa-clock fa-spin"></i>
+        </span>
+    </div>
 
     <!-- Fullscreen Toggle Button -->
     <button onclick="toggleFullScreen()" class="absolute top-[2vh] right-[2vw] z-50 p-[1vh] text-transparent hover:text-slate-500 transition" title="Toggle Fullscreen">
@@ -90,6 +108,7 @@
     <!-- Logic -->
 <script>
         const API_URL = 'http://127.0.0.1:8000/api/catalog/managed';
+        const HYPERPARAMETERS_API_URL = '/api/engine/hyperparameters';
         let priceStateCache = {}; 
         
         function formatPrice(price) {
@@ -125,6 +144,18 @@
                     <div class="text-center text-red-500 py-[10vh] text-[2.5vh] col-span-full">
                         <i class="fa-solid fa-triangle-exclamation mr-[1vw]"></i> Markedsforbindelse tabt
                     </div>`;
+            }
+        }
+
+        async function fetchCrashStatus() {
+            try {
+                const response = await fetch(HYPERPARAMETERS_API_URL);
+                if (!response.ok) throw new Error('Crash status response was not ok');
+                const hyperparameters = await response.json();
+                const alert = document.getElementById('crash-alert');
+                alert.classList.toggle('hidden', hyperparameters.crash !== true);
+            } catch (error) {
+                console.error('Error fetching crash status:', error);
             }
         }
 
@@ -210,7 +241,9 @@
         }
 
         fetchPrices();
+        fetchCrashStatus();
         setInterval(fetchPrices, 10000);
+        setInterval(fetchCrashStatus, 10000);
     </script>
 </body>
 </html>
